@@ -1,8 +1,8 @@
+import { createRequire } from 'node:module';
 import compression from 'compression';
 import cors from 'cors';
-import express, { type Express } from 'express';
+import express, { type Express, type RequestHandler } from 'express';
 import { rateLimit } from 'express-rate-limit';
-import { default as helmet } from 'helmet';
 import { pinoHttp } from 'pino-http';
 import { config, env } from './config';
 import { errorHandler, NotFoundError } from './lib/errors';
@@ -22,6 +22,9 @@ import { webhookRoutes } from './routes/webhook.routes';
 import { getMockPayment } from './services/billing/billing.service';
 import { uploadDir } from './services/storage.service';
 
+/** Helmet's dual CJS/ESM types break under Vercel's TS checker; runtime export is callable. */
+const require = createRequire(import.meta.url);
+const helmet = require('helmet') as (options?: Record<string, unknown>) => RequestHandler;
 export function createApp(extra?: (app: Express) => void): Express {
   const app = express();
   app.disable('x-powered-by');
