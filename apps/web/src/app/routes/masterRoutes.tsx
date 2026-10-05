@@ -1,15 +1,15 @@
 import { CalendarDays, LayoutGrid, UserRound, Users } from 'lucide-react';
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, Route } from 'react-router-dom';
 import { TabLayout } from '@/components/layout/TabBar';
 import { CabinetMarker, RequireMaster } from '../guards';
+import ClientsPage from '@/pages/master/ClientsPage';
+import DashboardPage from '@/pages/master/DashboardPage';
+import MenuPage from '@/pages/master/MenuPage';
+import SchedulePage from '@/pages/master/SchedulePage';
 
-const DashboardPage = lazy(() => import('@/pages/master/DashboardPage'));
-const SchedulePage = lazy(() => import('@/pages/master/SchedulePage'));
-const ClientsPage = lazy(() => import('@/pages/master/ClientsPage'));
 const ClientDetailPage = lazy(() => import('@/pages/master/ClientDetailPage'));
-const MenuPage = lazy(() => import('@/pages/master/MenuPage'));
 const ServicesPage = lazy(() => import('@/pages/master/ServicesPage'));
 const ReviewsPage = lazy(() => import('@/pages/master/ReviewsPage'));
 const AnalyticsPage = lazy(() => import('@/pages/master/AnalyticsPage'));
@@ -26,6 +26,13 @@ const ProfileSettingsPage = lazy(() => import('@/pages/master/ProfileSettingsPag
 
 function MasterTabs() {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    void import('@/pages/master/ServicesPage');
+    void import('@/pages/master/SettingsPage');
+    void import('@/pages/master/ClientDetailPage');
+  }, []);
+
   return (
     <TabLayout
       layoutId="master-tab"

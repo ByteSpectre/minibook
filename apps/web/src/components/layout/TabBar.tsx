@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Suspense, useRef, type ReactNode } from 'react';
+import { NavLink, useLocation, useOutlet } from 'react-router-dom';
 import { haptic } from '@/lib/telegram';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +13,27 @@ export interface TabItem {
   match?: string[];
   end?: boolean;
   badge?: number;
+}
+
+function findActiveTab(pathname: string, items: TabItem[]): TabItem | null {
+  let best: TabItem | null = null;
+  let bestLen = -1;
+  for (const item of items) {
+    for (const p of [item.to, ...(item.match ?? [])]) {
+      const hit = item.end ? pathname === p : pathname === p || pathname.startsWith(`${p}/`);
+      if (hit && p.length > bestLen) {
+        best = item;
+        bestLen = p.length;
+      }
+    }
+  }
+  return best;
+}
+
+/** Tab root only — stack routes like /client/account render a normal outlet. */
+function isTabRoot(pathname: string, tab: TabItem): boolean {
+  if (tab.end) return pathname === tab.to;
+  return pathname === tab.to;
 }
 
 export function TabBar({ items, layoutId }: { items: TabItem[]; layoutId: string }) {
@@ -62,11 +84,11 @@ export function TabBar({ items, layoutId }: { items: TabItem[]; layoutId: string
               ) : null}
               <span className="relative">
                 <Icon
-                  className={cn('size-[22px]', active && 'text-primary')}
+                  className={cn('size-[22px]', active && 'text-foreground')}
                   strokeWidth={active ? 2.3 : 1.9}
                 />
                 {item.badge ? (
-                  <span className="absolute -top-1 -right-2 min-w-4 rounded-full bg-primary px-1 text-center text-[10px] leading-4 text-white">
+                  <span className="absolute -top-1 -right-2 min-w-4 rounded-full bg-primary px-1 text-center text-[10px] leading-4 text-[color:var(--primary-foreground)]">
                     {item.badge > 9 ? '9+' : item.badge}
                   </span>
                 ) : null}
@@ -80,10 +102,39 @@ export function TabBar({ items, layoutId }: { items: TabItem[]; layoutId: string
   );
 }
 
+/**
+ * Tab shell: keeps visited tab roots mounted (instant switch, preserved scroll/state).
+ * Stack pages outside tab roots still use a normal outlet.
+ */
 export function TabLayout({ items, layoutId }: { items: TabItem[]; layoutId: string }) {
+  const { pathname } = useLocation();
+  const outlet = useOutlet();
+  const cacheRef = useRef(new Map<string, ReactNode>());
+
+  const activeTab = findActiveTab(pathname, items);
+  const onTabRoot = activeTab ? isTabRoot(pathname, activeTab) : false;
+
+  if (onTabRoot && activeTab && outlet) {
+    cacheRef.current.set(activeTab.to, outlet);
+  }
+
+  const useStack = !activeTab || !onTabRoot;
+
   return (
     <>
-      <Outlet />
+      {useStack ? (
+        <Suspense fallback={null}>{outlet}</Suspense>
+      ) : (
+        [...cacheRef.current.entries()].map(([key, node]) => (
+          <div
+            key={key}
+            className={key === activeTab!.to ? 'contents' : 'hidden'}
+            aria-hidden={key !== activeTab!.to}
+          >
+            {node}
+          </div>
+        ))
+      )}
       <TabBar items={items} layoutId={layoutId} />
     </>
   );

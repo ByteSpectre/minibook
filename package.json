@@ -28,15 +28,6 @@
     "db:reset": "pnpm --filter @nail-crm/api db:reset",
     "prepare": "husky"
   },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{js,cjs,mjs,json,md,css,yml,yaml}": [
-      "prettier --write"
-    ]
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.20.5",

@@ -1,0 +1,42 @@
+import type { SeedCity } from './types';
+
+export const KZ_CITIES: SeedCity[] = [
+  { name: 'Алматы', nameEn: 'Almaty', timezone: 'Asia/Almaty', lat: 43.2389, lng: 76.8897 },
+  { name: 'Астана', nameEn: 'Astana', timezone: 'Asia/Almaty', lat: 51.1694, lng: 71.4491 },
+  { name: 'Шымкент', nameEn: 'Shymkent', timezone: 'Asia/Almaty', lat: 42.3417, lng: 69.5901 },
+  { name: 'Караганда', nameEn: 'Karaganda', timezone: 'Asia/Almaty', lat: 49.8047, lng: 73.1094 },
+  { name: 'Актобе', nameEn: 'Aktobe', timezone: 'Asia/Aqtobe', lat: 50.2839, lng: 57.167 },
+  { name: 'Тараз', nameEn: 'Taraz', timezone: 'Asia/Almaty', lat: 42.8997, lng: 71.365 },
+  { name: 'Павлодар', nameEn: 'Pavlodar', timezone: 'Asia/Almaty', lat: 52.287, lng: 76.9674 },
+  {
+    name: 'Усть-Каменогорск',
+    nameEn: 'Oskemen',
+    timezone: 'Asia/Almaty',
+    lat: 49.948,
+    lng: 82.6289,
+  },
+  { name: 'Семей', nameEn: 'Semey', timezone: 'Asia/Almaty', lat: 50.4111, lng: 80.2275 },
+  { name: 'Атырау', nameEn: 'Atyrau', timezone: 'Asia/Atyrau', lat: 47.1164, lng: 51.925 },
+  {
+    name: 'Кызылорда',
+    nameEn: 'Kyzylorda',
+    timezone: 'Asia/Qyzylorda',
+    lat: 44.8488,
+    lng: 65.4823,
+  },
+  { name: 'Костанай', nameEn: 'Kostanay', timezone: 'Asia/Qostanay', lat: 53.2144, lng: 63.6246 },
+  { name: 'Петропавл', nameEn: 'Petropavl', timezone: 'Asia/Almaty', lat: 54.8753, lng: 69.162 },
+  { name: 'Актау', nameEn: 'Aktau', timezone: 'Asia/Aqtau', lat: 43.6532, lng: 51.1975 },
+  { name: 'Тюркестан', nameEn: 'Turkestan', timezone: 'Asia/Almaty', lat: 43.3019, lng: 68.2719 },
+  { name: 'Уральск', nameEn: 'Oral', timezone: 'Asia/Oral', lat: 51.2333, lng: 51.3667 },
+  { name: 'Кокшетау', nameEn: 'Kokshetau', timezone: 'Asia/Almaty', lat: 53.2833, lng: 69.3833 },
+  {
+    name: 'Талдыкорган',
+    nameEn: 'Taldykorgan',
+    timezone: 'Asia/Almaty',
+    lat: 45.0167,
+    lng: 78.3667,
+  },
+  { name: 'Экибастуз', nameEn: 'Ekibastuz', timezone: 'Asia/Almaty', lat: 51.7297, lng: 75.3264 },
+  { name: 'Рудный', nameEn: 'Rudny', timezone: 'Asia/Qostanay', lat: 52.9667, lng: 63.1167 },
+];

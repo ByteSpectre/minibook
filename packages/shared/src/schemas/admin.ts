@@ -112,3 +112,8 @@ export const adminListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(30),
 });
+
+export const resetOwnerProfileSchema = z.object({
+  kind: z.enum(['client', 'master', 'salon']),
+});
+export type ResetOwnerProfileInput = z.input<typeof resetOwnerProfileSchema>;

@@ -13,6 +13,7 @@ import {
   YMapZoomControl,
 } from 'ymap3-components';
 import { ClusterBubble, MarkerPin, PickedPin } from './MarkerPin';
+import { YANDEX_MAPS_API_KEY } from './config';
 import { MOSCOW, type MapMarker, type MapViewProps } from './types';
 
 type LngLat = [lon: number, lat: number, alt?: number];
@@ -26,8 +27,6 @@ interface Feature {
 
 const markerOf = (feature: Feature) => feature.properties?.marker as MapMarker;
 
-const API_KEY = (import.meta.env.VITE_YANDEX_MAPS_API_KEY as string | undefined) ?? '';
-
 /** Yandex Maps JS API v3 through the ymap3-components React wrapper. */
 export default function YandexMap({
   markers = [],
@@ -39,7 +38,8 @@ export default function YandexMap({
   showNearMe,
   className,
   height = 420,
-}: MapViewProps) {
+  onLoadError,
+}: MapViewProps & { onLoadError?: () => void }) {
   const { i18n } = useTranslation();
   const start =
     center ?? picked ?? (markers[0] ? { lat: markers[0].lat, lng: markers[0].lng } : MOSCOW);
@@ -60,7 +60,11 @@ export default function YandexMap({
 
   return (
     <div className={className} style={{ height, borderRadius: 24, overflow: 'hidden' }}>
-      <YMapComponentsProvider apiKey={API_KEY} lang={i18n.language === 'en' ? 'en_US' : 'ru_RU'}>
+      <YMapComponentsProvider
+        apiKey={YANDEX_MAPS_API_KEY}
+        lang={i18n.language === 'en' ? 'en_US' : 'ru_RU'}
+        onError={() => onLoadError?.()}
+      >
         <YMap location={location} mode="vector">
           <YMapDefaultSchemeLayer />
           <YMapDefaultFeaturesLayer />

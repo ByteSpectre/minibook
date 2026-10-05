@@ -77,8 +77,10 @@ export function availableCabinets(me: MeDto): Cabinet[] {
 }
 
 export function defaultRoute(me: MeDto, cabinet: Cabinet | null): string {
-  const cabinets = availableCabinets(me);
-  if (cabinet && cabinets.includes(cabinet)) return cabinetHome(cabinet);
-  const first = cabinets[0];
-  return first ? cabinetHome(first) : '/start';
+  // Remember last non-client cabinet only when the profile still exists.
+  if (cabinet === 'master' && me.master) return '/master';
+  if (cabinet === 'salon' && me.salon) return '/salon';
+  if (cabinet === 'admin' && me.isOwner) return '/admin';
+  // Everyone starts as a client.
+  return me.clientOnboarded ? '/client' : '/onboarding/client';
 }

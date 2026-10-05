@@ -27,39 +27,54 @@ deploy/      nginx, PM2, скрипты VPS, нагрузочный тест k6
 
 ## Быстрый старт (локально)
 
-Нужны **Node.js 22+**, **pnpm 10** (`corepack enable`) и **PostgreSQL 14+**.
+Нужны **Node.js 22+**, **pnpm 10** (`corepack enable`) и **PostgreSQL 14+** (удобнее всего через Docker — см. ниже).
 
 ```bash
 pnpm install
 
-# База данных (пример для локального Postgres)
-createuser -P beauty            # пароль: beauty
-createdb -O beauty beauty
-createdb -O beauty beauty_test  # для тестов
-
 cp apps/api/.env.example apps/api/.env   # JWT_SECRET можно оставить для локальной разработки
 cp apps/web/.env.example apps/web/.env
+# DATABASE_URL по умолчанию: postgresql://beauty:beauty@localhost:5432/beauty
 
 pnpm db:generate     # Prisma Client
 pnpm db:deploy       # миграции
-pnpm db:seed         # категории, страны, города и демо-данные
+pnpm db:seed         # категории, страны и города
 
 pnpm dev             # API на :4420 и Mini App на :5420
 ```
 
-Откройте <http://localhost:5420>. Вне Telegram показывается страница «Вход для разработки» с демо-персонажами:
+Откройте <http://localhost:5420>. Вне Telegram показывается страница «Вход для разработки» — можно создать нового пользователя и пройти онбординг с нуля.
 
-| Telegram ID   | Персонаж                                       | Что посмотреть                 |
-| ------------- | ---------------------------------------------- | ------------------------------ |
-| 100000        | Алексей — владелец платформы                   | `/admin`                       |
-| 100001        | Анна — клиент                                  | поиск, запись, календарь       |
-| 100002        | Мария — мастер `maria-nails`, подписка активна | весь кабинет мастера           |
-| 100003        | Ольга — салон «Лаванда», пробный период        | кабинет салона                 |
-| 100004–100006 | мастера салона                                 | общий кабинет салона           |
-| 100007        | Виктор — тату, СПб, триал заканчивается        | баннер подписки                |
-| 100008        | Алина — Алматы, цены в тенге                   | мультивалютность               |
-| 100009        | Софья — подписка истекла                       | заглушка «страница недоступна» |
-| 100011        | blocked_client — в чёрном списке у Марии       | заглушка блокировки            |
+### PostgreSQL в Docker
+
+В репозитории нет `Dockerfile` / `docker-compose` для всего стека — Docker используется только для базы. Команда совпадает с [docs/local-telegram-bot.md](docs/local-telegram-bot.md):
+
+```bash
+docker run -d --name glow-pg \
+  -e POSTGRES_USER=beauty -e POSTGRES_PASSWORD=beauty -e POSTGRES_DB=beauty \
+  -p 5432:5432 postgres:16
+
+docker exec glow-pg createdb -U beauty beauty_test   # база для автотестов
+```
+
+| Что            | Значение                                           |
+| -------------- | -------------------------------------------------- |
+| Контейнер      | `glow-pg` (`postgres:16`)                          |
+| Порт           | `5432` → хост                                      |
+| User / пароль  | `beauty` / `beauty`                                |
+| БД приложения  | `beauty`                                           |
+| БД тестов      | `beauty_test`                                      |
+| `DATABASE_URL` | `postgresql://beauty:beauty@localhost:5432/beauty` |
+
+Повторный запуск после перезагрузки: `docker start glow-pg`. Остановка: `docker stop glow-pg`.
+
+Без Docker — локальный Postgres:
+
+```bash
+createuser -P beauty            # пароль: beauty
+createdb -O beauty beauty
+createdb -O beauty beauty_test  # для тестов
+```
 
 ### Что работает без ключей (моки)
 
@@ -106,7 +121,7 @@ CI (`.github/workflows/ci.yml`) поднимает PostgreSQL и прогоня�
 
 ## Деплой на VPS
 
-Подробности — в `deploy/`:
+Полный гайд: [docs/vps-setup.md](docs/vps-setup.md). Кратко — скрипты в `deploy/`:
 
 - `deploy/setup-vps.sh` — первичная настройка Ubuntu: Node 22, pnpm, PM2, PostgreSQL, nginx, Let's Encrypt, ufw, генерация секретов в `.env`:
   ```bash
@@ -121,6 +136,10 @@ CI (`.github/workflows/ci.yml`) поднимает PostgreSQL и прогоня�
   ```
 
 Чек-лист продакшена: `NODE_ENV=production`, `DEV_AUTH_ENABLED=false`, `VITE_DEV_AUTH=false`, уникальные `JWT_SECRET` и `YOOKASSA_WEBHOOK_SECRET`, `TRUST_PROXY=1` за nginx, `WEB_APP_URL` и `PUBLIC_API_URL` на https, резервное копирование PostgreSQL (`pg_dump` по cron).
+
+## Тестовый стенд: Vercel + Supabase
+
+Для тестов без своего VPS: Postgres на **Supabase**, Mini App на **Vercel**, API — на Railway/Render (Express + cron + bot не ложатся на serverless без доработок). Полный гайд: [docs/vercel-supabase.md](docs/vercel-supabase.md).
 
 ## Уведомления и cron
 

@@ -507,7 +507,7 @@ function CitiesTab() {
 export default function AdminDictionariesPage() {
   const { t } = useTranslation();
   return (
-    <Page title={t('admin.menu.dictionaries')} back>
+    <Page title={t('admin.menu.dictionaries')} back bottomInset="none">
       <Tabs defaultValue="categories" className="gap-4">
         <TabsList className="glass h-11 w-full rounded-2xl p-1">
           <TabsTrigger value="categories" className="rounded-xl">

@@ -45,8 +45,8 @@ export function Page({
       )}
     >
       {header ?? (
-        <header className="pt-safe sticky top-0 z-30">
-          <div className="flex min-h-14 items-center gap-2 px-4 pt-3 pb-2">
+        <header className="pt-safe bg-background/85 backdrop-blur-xl">
+          <div className="flex min-h-14 items-center gap-2 px-[var(--page-px)] pt-4 pb-3">
             {showInlineBack ? (
               <button
                 type="button"
@@ -61,7 +61,7 @@ export function Page({
               {title ? (
                 <h1
                   className={cn(
-                    'truncate font-semibold tracking-tight',
+                    'font-heading truncate font-semibold tracking-tight',
                     largeTitle ? 'text-[26px] leading-tight' : 'text-[18px]',
                   )}
                 >
@@ -76,7 +76,14 @@ export function Page({
           </div>
         </header>
       )}
-      <main className={cn('flex flex-1 flex-col gap-4 px-4 pt-1', className)}>{children}</main>
+      <main
+        className={cn(
+          'flex flex-1 flex-col gap-[var(--page-gap)] px-[var(--page-px)] pt-4 pb-2',
+          className,
+        )}
+      >
+        {children}
+      </main>
     </div>
   );
 }

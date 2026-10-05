@@ -9,10 +9,11 @@ import {
   paginationSchema,
   platformSettingsPatchSchema,
   promoCodeUpsertSchema,
+  resetOwnerProfileSchema,
   tenantActionSchema,
 } from '@nail-crm/shared';
 import { defineRouter, handle, idParams } from '../lib/http';
-import { authenticate, requireOwner } from '../middleware/auth';
+import { authenticate, getAuth, requireOwner } from '../middleware/auth';
 import {
   adminListCategories,
   adminListCities,
@@ -29,6 +30,7 @@ import {
   listExperiments,
   listPromoCodes,
   listTenants,
+  resetOwnerProfile,
   tenantAction,
   updatePlatformSettings,
   upsertCategory,
@@ -37,6 +39,7 @@ import {
   upsertExperiment,
   upsertPromoCode,
 } from '../services/admin.service';
+import { issueSession } from '../services/auth.service';
 import { sendWeeklyDigest } from '../cron/jobs';
 
 export const adminRoutes = defineRouter('/api/admin');
@@ -207,4 +210,13 @@ adminRoutes.patch(
 adminRoutes.post(
   '/digest/send',
   handle({}, async () => ({ sent: await sendWeeklyDigest(new Date(), true) })),
+);
+
+adminRoutes.post(
+  '/reset-profile',
+  handle({ body: resetOwnerProfileSchema }, async ({ req, body }) => {
+    const userId = getAuth(req).userId;
+    await resetOwnerProfile(userId, body.kind);
+    return issueSession(userId);
+  }),
 );

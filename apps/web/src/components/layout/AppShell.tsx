@@ -8,19 +8,7 @@ import { useAuth } from '@/store/auth';
 import { useUi } from '@/store/ui';
 
 export function Backdrop() {
-  return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute -top-24 -left-20 size-[420px] animate-blob rounded-full bg-[var(--blob-1)] opacity-70 blur-3xl" />
-      <div
-        className="absolute top-1/3 -right-24 size-[380px] animate-blob rounded-full bg-[var(--blob-2)] opacity-70 blur-3xl"
-        style={{ animationDelay: '-6s' }}
-      />
-      <div
-        className="absolute -bottom-32 left-1/4 size-[360px] animate-blob rounded-full bg-[var(--blob-3)] opacity-60 blur-3xl"
-        style={{ animationDelay: '-12s' }}
-      />
-    </div>
-  );
+  return <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-background" />;
 }
 
 function MainButtonFallback() {
@@ -59,7 +47,7 @@ function DevBanner() {
   const me = useAuth((s) => s.me);
   if (telegramEnv().inTelegram || !me) return null;
   return (
-    <div className="fixed top-2 left-1/2 z-[60] -translate-x-1/2 rounded-full bg-foreground/80 px-3 py-1 text-[11px] font-medium text-background shadow-lg backdrop-blur">
+    <div className="fixed top-2 left-1/2 z-[60] -translate-x-1/2 rounded-full border border-border bg-background/90 px-3 py-1 text-[11px] font-medium text-foreground shadow-lg backdrop-blur">
       {t('common.devBanner')}
     </div>
   );

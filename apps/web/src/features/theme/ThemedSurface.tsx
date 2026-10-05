@@ -58,7 +58,7 @@ export function themeStyle(theme: ThemeDto): CSSProperties {
     '--muted': withAlpha(theme.textColor, 0.07),
     '--muted-foreground': withAlpha(theme.textColor, 0.62),
     '--border': withAlpha(theme.textColor, 0.12),
-    '--brand-gradient': theme.btnBg,
+    '--brand': theme.btnBg,
     '--brand-foreground': theme.btnText,
     '--ring': withAlpha(theme.accent, 0.45),
     color: theme.textColor,

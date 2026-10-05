@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Loader2, X } from 'lucide-react';
+import { Building2, Check, Gift, Loader2, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,7 @@ import {
 import { useCities } from '@/api/common';
 import { Page } from '@/components/layout/Page';
 import { FullscreenSpinner } from '@/components/layout/states';
+import { AddressInput } from '@/components/domain/AddressInput';
 import { CategoryGrid, CityPicker, CountryPicker } from '@/components/domain/pickers';
 import { SinglePhotoUploader } from '@/components/domain/PhotoUploader';
 import { MapView } from '@/components/map/MapView';
@@ -285,10 +286,14 @@ export function TenantOnboarding({ kind, joinSalon, referrerMasterId }: TenantOn
         ))}
       </div>
       {step === 0 && joinSalon ? (
-        <GlassCard className="text-[14px]">🏛 {t('master.onboarding.joinSalon')}</GlassCard>
+        <GlassCard className="flex items-center gap-2 text-[14px]">
+          <Building2 className="size-4 shrink-0" /> {t('master.onboarding.joinSalon')}
+        </GlassCard>
       ) : null}
       {step === 0 && referrerMasterId ? (
-        <GlassCard className="text-[14px]">🎁 {t('master.onboarding.referral')}</GlassCard>
+        <GlassCard className="flex items-center gap-2 text-[14px]">
+          <Gift className="size-4 shrink-0" /> {t('master.onboarding.referral')}
+        </GlassCard>
       ) : null}
       <AnimatePresence mode="wait">
         <motion.div
@@ -423,10 +428,18 @@ export function TenantOnboarding({ kind, joinSalon, referrerMasterId }: TenantOn
           {key === 'address' ? (
             <div className="flex flex-col gap-3">
               <Field label={t('master.onboarding.address')}>
-                <GlassInput
+                <AddressInput
                   value={v.address}
                   placeholder={t('master.onboarding.addressPlaceholder')}
-                  onChange={(e) => set({ address: e.target.value })}
+                  onChange={(address) => set({ address })}
+                  onPick={(s) =>
+                    set({
+                      address: s.address || s.title,
+                      ...(s.lat != null && s.lng != null
+                        ? { latitude: s.lat, longitude: s.lng }
+                        : {}),
+                    })
+                  }
                 />
               </Field>
               <MapView

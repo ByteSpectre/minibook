@@ -13,7 +13,7 @@ import {
 import { useCompleteClientOnboarding } from '@/api/clientApi';
 import { Page } from '@/components/layout/Page';
 import { PhoneInput } from '@/components/domain/pickers';
-import { Field, GlassCard, GlassInput } from '@/components/ui/glass';
+import { Field, GlassInput } from '@/components/ui/glass';
 import { useMainButton } from '@/hooks/telegram';
 import { haptic, telegramEnv } from '@/lib/telegram';
 import { cn } from '@/lib/utils';
@@ -175,7 +175,7 @@ export default function ClientOnboardingPage() {
           ) : null}
 
           {step === 3 ? (
-            <GlassCard className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
               <Field
                 label={t('client.onboarding.phone')}
                 required
@@ -201,7 +201,7 @@ export default function ClientOnboardingPage() {
                   {...register('username')}
                 />
               </Field>
-            </GlassCard>
+            </div>
           ) : null}
           {last ? (
             <p className="text-center text-[12px] text-muted-foreground">

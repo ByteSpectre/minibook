@@ -4,12 +4,51 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no" />
-    <meta name="theme-color" content="#f7f4fb" />
+    <meta name="theme-color" content="#050505" />
     <meta name="description" content="Glow — запись к мастерам красоты в Telegram" />
     <title>Glow — запись к мастерам красоты</title>
+    <link rel="preload" href="/fonts/onest-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/onest-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/cormorant-garamond-cyrillic-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/cormorant-garamond-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts.css" />
+    <style>
+      html, body {
+        margin: 0;
+        background: #050505;
+        color: #f5f0e8;
+        min-height: 100%;
+      }
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        background: #050505;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #boot img {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+      }
+      #boot p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.55;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="boot" aria-busy="true">
+        <img src="/logo.png" alt="Glow" width="72" height="72" />
+        <p>Glow</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

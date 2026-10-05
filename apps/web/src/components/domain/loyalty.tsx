@@ -2,6 +2,7 @@ import type { TFunction } from 'i18next';
 import { Gift } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { LoyaltyProgress, LoyaltyRuleDto, LoyaltyType } from '@nail-crm/shared';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
 import { Switch } from '@/components/ui/switch';
 import { GlassCard } from '@/components/ui/glass';
 import { cn } from '@/lib/utils';
@@ -91,7 +92,7 @@ export function LoyaltyRuleCard({
         className="flex min-w-0 flex-1 items-center gap-3 text-left"
       >
         <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-accent text-xl">
-          {emoji}
+          <MonoEmoji>{emoji}</MonoEmoji>
         </span>
         <span className="min-w-0">
           <span className="block text-[15px] font-semibold">

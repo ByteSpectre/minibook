@@ -1,0 +1,46 @@
+import type { SeedCity } from './types';
+
+export const RS_CITIES: SeedCity[] = [
+  { name: 'Белград', nameEn: 'Belgrade', timezone: 'Europe/Belgrade', lat: 44.7866, lng: 20.4489 },
+  { name: 'Novi Sad', nameEn: 'Novi Sad', timezone: 'Europe/Belgrade', lat: 45.2671, lng: 19.8335 },
+  { name: 'Niš', nameEn: 'Niš', timezone: 'Europe/Belgrade', lat: 43.3209, lng: 21.8958 },
+  {
+    name: 'Kragujevac',
+    nameEn: 'Kragujevac',
+    timezone: 'Europe/Belgrade',
+    lat: 44.0128,
+    lng: 20.9114,
+  },
+  { name: 'Subotica', nameEn: 'Subotica', timezone: 'Europe/Belgrade', lat: 46.1006, lng: 19.6656 },
+  {
+    name: 'Zrenjanin',
+    nameEn: 'Zrenjanin',
+    timezone: 'Europe/Belgrade',
+    lat: 45.3836,
+    lng: 20.3819,
+  },
+  { name: 'Pančevo', nameEn: 'Pančevo', timezone: 'Europe/Belgrade', lat: 44.8708, lng: 20.6403 },
+  { name: 'Čačak', nameEn: 'Čačak', timezone: 'Europe/Belgrade', lat: 43.8914, lng: 20.3497 },
+  {
+    name: 'Novi Pazar',
+    nameEn: 'Novi Pazar',
+    timezone: 'Europe/Belgrade',
+    lat: 43.1367,
+    lng: 20.5122,
+  },
+  { name: 'Kraljevo', nameEn: 'Kraljevo', timezone: 'Europe/Belgrade', lat: 43.7257, lng: 20.6894 },
+  {
+    name: 'Smederevo',
+    nameEn: 'Smederevo',
+    timezone: 'Europe/Belgrade',
+    lat: 44.365,
+    lng: 20.9303,
+  },
+  { name: 'Leskovac', nameEn: 'Leskovac', timezone: 'Europe/Belgrade', lat: 42.9981, lng: 21.9461 },
+  { name: 'Valjevo', nameEn: 'Valjevo', timezone: 'Europe/Belgrade', lat: 44.2751, lng: 19.8982 },
+  { name: 'Kruševac', nameEn: 'Kruševac', timezone: 'Europe/Belgrade', lat: 43.5806, lng: 21.3339 },
+  { name: 'Užice', nameEn: 'Užice', timezone: 'Europe/Belgrade', lat: 43.8586, lng: 19.8488 },
+  { name: 'Vranje', nameEn: 'Vranje', timezone: 'Europe/Belgrade', lat: 42.5514, lng: 21.9003 },
+  { name: 'Šabac', nameEn: 'Šabac', timezone: 'Europe/Belgrade', lat: 44.7537, lng: 19.6906 },
+  { name: 'Sombor', nameEn: 'Sombor', timezone: 'Europe/Belgrade', lat: 44.7742, lng: 19.1122 },
+];

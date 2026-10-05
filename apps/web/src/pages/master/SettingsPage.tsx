@@ -4,6 +4,7 @@ import {
   type MasterSettingsDto,
   type SettingsPatchInput,
 } from '@nail-crm/shared';
+import { Bell, Calendar, CalendarCheck, MessageSquare } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -16,16 +17,8 @@ import {
 import { Page } from '@/components/layout/Page';
 import { ErrorState, PageLoader } from '@/components/layout/states';
 import { Switch } from '@/components/ui/switch';
-import {
-  Chip,
-  Field,
-  GlassCard,
-  GlassInput,
-  GlassTextarea,
-  ListGroup,
-  ListRow,
-  SectionTitle,
-} from '@/components/ui/glass';
+import { Chip, Field, GlassInput, GlassTextarea, ListGroup, ListRow } from '@/components/ui/glass';
+import { AccordionSection } from '@/components/ui/master-ui';
 import { cn } from '@/lib/utils';
 
 const BUFFERS = [0, 5, 10, 15, 20, 30];
@@ -51,7 +44,7 @@ function ChoiceRow<T extends string | number>({
 }) {
   return (
     <Field label={label} hint={hint}>
-      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+      <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
         {options.map((o) => (
           <Chip key={o} active={o === value} onClick={() => o !== value && onChange(o)}>
             {format(o)}
@@ -98,206 +91,234 @@ export default function MasterSettingsPage() {
         : t('common.hours', { count: v / 60 });
 
   return (
-    <Page title={t('master.settings.title')} back bottomInset="none">
-      <section>
-        <SectionTitle>{t('master.settings.booking')}</SectionTitle>
-        <ListGroup>
-          <ListRow
-            title={t('master.settings.autoConfirm')}
-            subtitle={t('master.settings.autoConfirmHint')}
-            right={
-              <Switch
-                checked={p.autoConfirm}
-                onCheckedChange={(autoConfirm) => patchProfile.mutate({ autoConfirm })}
-              />
-            }
-          />
-          <ListRow
-            title={t('master.settings.multiService')}
-            right={
-              <Switch
-                checked={p.allowMultiService}
-                onCheckedChange={(allowMultiService) => patchProfile.mutate({ allowMultiService })}
-              />
-            }
-          />
-        </ListGroup>
-      </section>
-
-      <GlassCard className="flex flex-col gap-4">
-        <ChoiceRow
-          label={t('master.settings.slotStep')}
-          options={SLOT_STEPS}
-          value={s.slotStep as (typeof SLOT_STEPS)[number]}
-          format={minutes}
-          onChange={(slotStep) => save({ slotStep })}
-        />
-        <ChoiceRow
-          label={t('master.settings.buffer')}
-          options={BUFFERS}
-          value={s.bufferMinutes}
-          format={minutes}
-          onChange={(bufferMinutes) => save({ bufferMinutes })}
-        />
-        <ChoiceRow
-          label={t('master.settings.minLead')}
-          options={LEADS}
-          value={s.minLeadMinutes}
-          format={minutes}
-          onChange={(minLeadMinutes) => save({ minLeadMinutes })}
-        />
-        <ChoiceRow
-          label={t('master.settings.horizon')}
-          options={HORIZONS}
-          value={s.bookingHorizonDays}
-          format={(v) => t('common.days', { count: v })}
-          onChange={(bookingHorizonDays) => save({ bookingHorizonDays })}
-        />
-      </GlassCard>
-
-      <section>
-        <SectionTitle>{t('master.settings.periods')}</SectionTitle>
-        <ListGroup>
-          {PERIODS.map((period) => {
-            const enabled = s[`${period}Enabled`];
-            return (
-              <div key={period} className="flex items-center gap-3 px-4 py-3">
+    <Page
+      title={t('master.settings.title')}
+      subtitle={t('master.settings.subtitle')}
+      back
+      bottomInset="none"
+    >
+      <div className="flex flex-col gap-3">
+        <AccordionSection
+          icon={<CalendarCheck className="size-5" />}
+          title={t('master.settings.sectionBooking')}
+          subtitle={t('master.settings.sectionBookingHint')}
+          defaultOpen
+          accent
+        >
+          <ListGroup className="border-0 bg-transparent shadow-none">
+            <ListRow
+              title={t('master.settings.autoConfirm')}
+              subtitle={t('master.settings.autoConfirmHint')}
+              right={
                 <Switch
-                  checked={enabled}
-                  onCheckedChange={(v) => save({ [`${period}Enabled`]: v })}
-                  aria-label={t(`enums.period.${period}`)}
+                  checked={p.autoConfirm}
+                  onCheckedChange={(autoConfirm) => patchProfile.mutate({ autoConfirm })}
                 />
-                <span
-                  className={cn(
-                    'w-16 text-[15px] font-medium',
-                    !enabled && 'text-muted-foreground',
-                  )}
-                >
-                  {t(`enums.period.${period}`)}
-                </span>
-                <div
-                  className={cn(
-                    'flex flex-1 items-center justify-end gap-1.5',
-                    !enabled && 'pointer-events-none opacity-50',
-                  )}
-                >
-                  <GlassInput
-                    type="time"
-                    step={300}
-                    className="h-10 w-[92px] px-2 text-center text-[15px]"
-                    value={s[`${period}Start`]}
-                    onChange={(e) => e.target.value && save({ [`${period}Start`]: e.target.value })}
+              }
+            />
+            <ListRow
+              title={t('master.settings.multiService')}
+              right={
+                <Switch
+                  checked={p.allowMultiService}
+                  onCheckedChange={(allowMultiService) =>
+                    patchProfile.mutate({ allowMultiService })
+                  }
+                />
+              }
+            />
+          </ListGroup>
+        </AccordionSection>
+
+        <AccordionSection
+          icon={<Calendar className="size-5" />}
+          title={t('master.settings.sectionSlots')}
+          subtitle={t('master.settings.sectionSlotsHint')}
+        >
+          <div className="flex flex-col gap-4 p-4 pt-3">
+            <ChoiceRow
+              label={t('master.settings.slotStep')}
+              options={SLOT_STEPS}
+              value={s.slotStep as (typeof SLOT_STEPS)[number]}
+              format={minutes}
+              onChange={(slotStep) => save({ slotStep })}
+            />
+            <ChoiceRow
+              label={t('master.settings.buffer')}
+              options={BUFFERS}
+              value={s.bufferMinutes}
+              format={minutes}
+              onChange={(bufferMinutes) => save({ bufferMinutes })}
+            />
+            <ChoiceRow
+              label={t('master.settings.minLead')}
+              options={LEADS}
+              value={s.minLeadMinutes}
+              format={minutes}
+              onChange={(minLeadMinutes) => save({ minLeadMinutes })}
+            />
+            <ChoiceRow
+              label={t('master.settings.horizon')}
+              options={HORIZONS}
+              value={s.bookingHorizonDays}
+              format={(v) => t('common.days', { count: v })}
+              onChange={(bookingHorizonDays) => save({ bookingHorizonDays })}
+            />
+          </div>
+        </AccordionSection>
+
+        <AccordionSection
+          icon={<Calendar className="size-5" />}
+          title={t('master.settings.sectionSchedule')}
+          subtitle={t('master.settings.sectionScheduleHint')}
+        >
+          <ListGroup className="border-0 bg-transparent shadow-none">
+            {PERIODS.map((period) => {
+              const enabled = s[`${period}Enabled`];
+              return (
+                <div key={period} className="flex items-center gap-3 px-4 py-3">
+                  <Switch
+                    checked={enabled}
+                    onCheckedChange={(v) => save({ [`${period}Enabled`]: v })}
+                    aria-label={t(`enums.period.${period}`)}
                   />
-                  <span className="text-muted-foreground">–</span>
-                  <GlassInput
-                    type="time"
-                    step={300}
-                    className="h-10 w-[92px] px-2 text-center text-[15px]"
-                    value={s[`${period}End`]}
-                    onChange={(e) => e.target.value && save({ [`${period}End`]: e.target.value })}
+                  <span
+                    className={cn(
+                      'w-16 text-[15px] font-medium',
+                      !enabled && 'text-muted-foreground',
+                    )}
+                  >
+                    {t(`enums.period.${period}`)}
+                  </span>
+                  <div
+                    className={cn(
+                      'flex flex-1 items-center justify-end gap-1.5',
+                      !enabled && 'pointer-events-none opacity-50',
+                    )}
+                  >
+                    <GlassInput
+                      type="time"
+                      step={300}
+                      className="h-10 w-[92px] px-2 text-center text-[15px]"
+                      value={s[`${period}Start`]}
+                      onChange={(e) =>
+                        e.target.value && save({ [`${period}Start`]: e.target.value })
+                      }
+                    />
+                    <span className="text-muted-foreground">–</span>
+                    <GlassInput
+                      type="time"
+                      step={300}
+                      className="h-10 w-[92px] px-2 text-center text-[15px]"
+                      value={s[`${period}End`]}
+                      onChange={(e) => e.target.value && save({ [`${period}End`]: e.target.value })}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </ListGroup>
+          <p className="px-4 pb-3 text-[12px] text-muted-foreground">
+            {t('master.settings.periodsHint')}
+          </p>
+        </AccordionSection>
+
+        <AccordionSection
+          icon={<Bell className="size-5" />}
+          title={t('master.settings.sectionNotifications')}
+          subtitle={t('master.settings.sectionNotificationsHint')}
+        >
+          <ListGroup className="border-0 bg-transparent shadow-none">
+            <ListRow
+              title={t('master.settings.evening')}
+              subtitle={t('master.settings.eveningHint')}
+              right={
+                <Switch
+                  checked={s.dailyReminderEnabled}
+                  onCheckedChange={(dailyReminderEnabled) => save({ dailyReminderEnabled })}
+                />
+              }
+            />
+            {s.dailyReminderEnabled ? (
+              <>
+                <div className="px-4 py-3">
+                  <ChoiceRow
+                    label={t('master.settings.eveningTime')}
+                    options={EVENING_REMINDER_TIMES}
+                    value={s.dailyReminderTime as (typeof EVENING_REMINDER_TIMES)[number]}
+                    format={(v) => v}
+                    onChange={(dailyReminderTime) => save({ dailyReminderTime })}
                   />
                 </div>
-              </div>
-            );
-          })}
-        </ListGroup>
-        <p className="mt-2 px-1 text-[12px] text-muted-foreground">
-          {t('master.settings.periodsHint')}
-        </p>
-      </section>
-
-      <section>
-        <SectionTitle>{t('master.settings.notifications')}</SectionTitle>
-        <ListGroup>
-          <ListRow
-            title={t('master.settings.evening')}
-            subtitle={t('master.settings.eveningHint')}
-            right={
-              <Switch
-                checked={s.dailyReminderEnabled}
-                onCheckedChange={(dailyReminderEnabled) => save({ dailyReminderEnabled })}
-              />
-            }
-          />
-          {s.dailyReminderEnabled ? (
-            <>
-              <div className="px-4 py-3">
-                <ChoiceRow
-                  label={t('master.settings.eveningTime')}
-                  options={EVENING_REMINDER_TIMES}
-                  value={s.dailyReminderTime as (typeof EVENING_REMINDER_TIMES)[number]}
-                  format={(v) => v}
-                  onChange={(dailyReminderTime) => save({ dailyReminderTime })}
+                <ListRow
+                  title={t('master.settings.eveningEmpty')}
+                  right={
+                    <Switch
+                      checked={s.dailyReminderSendEmpty}
+                      onCheckedChange={(dailyReminderSendEmpty) => save({ dailyReminderSendEmpty })}
+                    />
+                  }
                 />
-              </div>
-              <ListRow
-                title={t('master.settings.eveningEmpty')}
-                right={
-                  <Switch
-                    checked={s.dailyReminderSendEmpty}
-                    onCheckedChange={(dailyReminderSendEmpty) => save({ dailyReminderSendEmpty })}
-                  />
-                }
-              />
-            </>
-          ) : null}
-          <ListRow
-            title={t('master.settings.morning')}
-            right={
-              <Switch
-                checked={s.morningSummaryEnabled}
-                onCheckedChange={(morningSummaryEnabled) => save({ morningSummaryEnabled })}
-              />
-            }
-          />
-          <ListRow
-            title={t('master.settings.slotAlerts')}
-            subtitle={t('master.settings.slotAlertsHint')}
-            right={
-              <Switch
-                checked={s.slotAlertsEnabled}
-                onCheckedChange={(slotAlertsEnabled) => save({ slotAlertsEnabled })}
-              />
-            }
-          />
-        </ListGroup>
-      </section>
-
-      <GlassCard className="flex flex-col gap-4">
-        <ChoiceRow
-          label={t('master.settings.onlineDuration')}
-          hint={t('master.settings.online')}
-          options={ONLINE_HOURS}
-          value={s.onlineDurationHours}
-          format={(v) => t('common.hours', { count: v })}
-          onChange={(onlineDurationHours) => save({ onlineDurationHours })}
-        />
-      </GlassCard>
-
-      <section>
-        <SectionTitle>{t('master.settings.postVisit')}</SectionTitle>
-        <GlassCard>
-          <Field hint={t('master.settings.postVisitHint')}>
-            <GlassTextarea
-              value={postVisit}
-              maxLength={1000}
-              placeholder={t('master.settings.postVisitPlaceholder')}
-              onChange={(e) => setPostVisit(e.target.value)}
-              onBlur={() => {
-                const next = postVisit.trim() || null;
-                if (next !== (p.postVisitMessage ?? null))
-                  patchProfile.mutate(
-                    { postVisitMessage: next },
-                    {
-                      onSuccess: () =>
-                        toast.success(t('master.settings.saved'), { id: 'settings-saved' }),
-                    },
-                  );
-              }}
+              </>
+            ) : null}
+            <ListRow
+              title={t('master.settings.morning')}
+              right={
+                <Switch
+                  checked={s.morningSummaryEnabled}
+                  onCheckedChange={(morningSummaryEnabled) => save({ morningSummaryEnabled })}
+                />
+              }
             />
-          </Field>
-        </GlassCard>
-      </section>
+            <ListRow
+              title={t('master.settings.slotAlerts')}
+              subtitle={t('master.settings.slotAlertsHint')}
+              right={
+                <Switch
+                  checked={s.slotAlertsEnabled}
+                  onCheckedChange={(slotAlertsEnabled) => save({ slotAlertsEnabled })}
+                />
+              }
+            />
+          </ListGroup>
+        </AccordionSection>
+
+        <AccordionSection
+          icon={<MessageSquare className="size-5" />}
+          title={t('master.settings.sectionAfterVisit')}
+          subtitle={t('master.settings.sectionAfterVisitHint')}
+        >
+          <div className="flex flex-col gap-4 p-4 pt-3">
+            <ChoiceRow
+              label={t('master.settings.onlineDuration')}
+              hint={t('master.settings.online')}
+              options={ONLINE_HOURS}
+              value={s.onlineDurationHours}
+              format={(v) => t('common.hours', { count: v })}
+              onChange={(onlineDurationHours) => save({ onlineDurationHours })}
+            />
+            <Field hint={t('master.settings.postVisitHint')}>
+              <GlassTextarea
+                value={postVisit}
+                maxLength={1000}
+                placeholder={t('master.settings.postVisitPlaceholder')}
+                onChange={(e) => setPostVisit(e.target.value)}
+                onBlur={() => {
+                  const next = postVisit.trim() || null;
+                  if (next !== (p.postVisitMessage ?? null))
+                    patchProfile.mutate(
+                      { postVisitMessage: next },
+                      {
+                        onSuccess: () =>
+                          toast.success(t('master.settings.saved'), { id: 'settings-saved' }),
+                      },
+                    );
+                }}
+              />
+            </Field>
+          </div>
+        </AccordionSection>
+      </div>
     </Page>
   );
 }

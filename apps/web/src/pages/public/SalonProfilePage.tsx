@@ -1,4 +1,4 @@
-import { ChevronRight, MapPin, Megaphone, Send, Share2 } from 'lucide-react';
+import { ChevronRight, Gift, MapPin, Megaphone, Send, Share2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -98,7 +98,11 @@ function SalonContent({ salon }: { salon: PublicSalonDto }) {
 
       {salon.promotions.length ? (
         <section>
-          <SectionTitle>🎁 {t('public.promotions')}</SectionTitle>
+          <SectionTitle>
+            <span className="inline-flex items-center gap-2">
+              <Gift className="size-4" /> {t('public.promotions')}
+            </span>
+          </SectionTitle>
           <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4">
             {salon.promotions.map((p) => (
               <GlassCard key={p.id} className="flex w-[260px] shrink-0 flex-col gap-2">

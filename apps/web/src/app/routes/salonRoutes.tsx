@@ -1,17 +1,17 @@
 import { Building2, CalendarDays, LayoutGrid, Menu, Users } from 'lucide-react';
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, Route } from 'react-router-dom';
 import { TabLayout } from '@/components/layout/TabBar';
 import { CabinetMarker, RequireSalon } from '../guards';
+import ClientsPage from '@/pages/salon/ClientsPage';
+import DashboardPage from '@/pages/salon/DashboardPage';
+import MastersPage from '@/pages/salon/MastersPage';
+import MenuPage from '@/pages/salon/MenuPage';
+import SchedulePage from '@/pages/salon/SchedulePage';
 
-const DashboardPage = lazy(() => import('@/pages/salon/DashboardPage'));
-const SchedulePage = lazy(() => import('@/pages/salon/SchedulePage'));
-const MastersPage = lazy(() => import('@/pages/salon/MastersPage'));
 const InviteMasterPage = lazy(() => import('@/pages/salon/InviteMasterPage'));
-const ClientsPage = lazy(() => import('@/pages/salon/ClientsPage'));
 const ClientDetailPage = lazy(() => import('@/pages/salon/ClientDetailPage'));
-const MenuPage = lazy(() => import('@/pages/salon/MenuPage'));
 const ServicesPage = lazy(() => import('@/pages/salon/ServicesPage'));
 const ReviewsPage = lazy(() => import('@/pages/salon/ReviewsPage'));
 const AnalyticsPage = lazy(() => import('@/pages/salon/AnalyticsPage'));
@@ -23,6 +23,13 @@ const ThemePage = lazy(() => import('@/pages/salon/ThemePage'));
 
 function SalonTabs() {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    void import('@/pages/salon/ServicesPage');
+    void import('@/pages/salon/InviteMasterPage');
+    void import('@/pages/salon/ClientDetailPage');
+  }, []);
+
   return (
     <TabLayout
       layoutId="salon-tab"

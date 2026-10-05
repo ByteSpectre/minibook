@@ -52,7 +52,7 @@ export default function SharePage() {
         </GlassCard>
       </section>
       {sub.data?.referralLink ? (
-        <GlassCard className="flex flex-col gap-3 bg-gradient-to-br from-pink-500/10 to-violet-500/10">
+        <GlassCard className="flex flex-col gap-3 border border-foreground/10">
           <div className="flex items-center gap-2 text-[16px] font-semibold">
             <Gift className="size-5 text-primary" /> {t('master.share.referral')}
           </div>

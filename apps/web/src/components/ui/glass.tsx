@@ -22,7 +22,7 @@ export function GlassCard({
     <div
       className={cn(
         strong ? 'glass-strong' : 'glass',
-        'rounded-[var(--card-radius,1.5rem)] p-4',
+        'rounded-[var(--card-radius,0.75rem)] p-[var(--card-p,1.25rem)]',
         interactive && 'transition-transform duration-200 active:scale-[0.985]',
         className,
       )}
@@ -90,8 +90,7 @@ const glassButtonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          'bg-brand text-[color:var(--brand-foreground,#fff)] shadow-[0_8px_24px_-8px_rgba(224,69,127,0.45)]',
+        primary: 'bg-brand text-[color:var(--brand-foreground)] border border-border shadow-sm',
         glass: 'glass text-foreground',
         solid: 'bg-foreground text-background',
         ghost: 'text-foreground hover:bg-muted',
@@ -274,8 +273,8 @@ export function SectionTitle({
   className?: string;
 }) {
   return (
-    <div className={cn('mb-2 flex items-center justify-between px-1', className)}>
-      <h2 className="text-[17px] font-semibold tracking-tight">{children}</h2>
+    <div className={cn('mb-[var(--section-gap)] flex items-center justify-between', className)}>
+      <h2 className="font-heading text-[18px] font-semibold tracking-tight">{children}</h2>
       {action}
     </div>
   );
@@ -333,14 +332,14 @@ export function ListRow({
       onClick={onClick ? () => (haptic.select(), onClick()) : undefined}
       onPointerDown={onClick ? ripple.onPointerDown : undefined}
       className={cn(
-        'relative flex min-h-14 w-full items-center gap-3 overflow-hidden px-4 py-3 text-left transition-colors',
+        'relative flex min-h-[3.25rem] w-full items-center gap-3 overflow-hidden px-[var(--card-p)] py-3.5 text-left transition-colors',
         onClick && 'active:bg-muted',
         danger && 'text-destructive',
         className,
       )}
     >
       {icon ? (
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-muted text-[18px]">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-muted text-foreground [&_svg]:size-[18px]">
           {icon}
         </span>
       ) : null}

@@ -54,13 +54,13 @@ export function SubscriptionBanner({
   })();
   if (!content) return null;
   const tone = {
-    trial: 'from-violet-500/15 to-pink-500/15',
-    warn: 'from-amber-400/25 to-orange-400/20',
-    danger: 'from-rose-500/20 to-red-500/15',
-    info: 'from-sky-400/15 to-violet-400/15',
+    trial: 'border border-border bg-muted',
+    warn: 'border border-foreground/20 bg-muted',
+    danger: 'border border-destructive/30 bg-destructive/10',
+    info: 'border border-border bg-muted',
   }[content.tone];
   return (
-    <GlassCard className={cn('flex items-center gap-3 bg-gradient-to-r p-3.5', tone, className)}>
+    <GlassCard className={cn('flex items-center gap-3 p-3.5', tone, className)}>
       <Sparkles className="size-5 shrink-0 text-primary" />
       <span className="flex-1 text-[14px] font-medium">{content.text}</span>
       {content.cta ? (

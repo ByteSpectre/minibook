@@ -1,23 +1,24 @@
-import { Star } from 'lucide-react';
+import { Building2, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { AppointmentStatus, SubStatus } from '@nail-crm/shared';
 import { initials } from '@nail-crm/shared';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
 import { assetUrl } from '@/lib/assets';
 import { cn } from '@/lib/utils';
 
-const GRADIENTS = [
-  'from-pink-400 to-fuchsia-500',
-  'from-violet-400 to-indigo-500',
-  'from-amber-300 to-orange-500',
-  'from-emerald-300 to-teal-500',
-  'from-sky-300 to-blue-500',
-  'from-rose-300 to-pink-500',
+const AVATAR_TONES = [
+  'bg-neutral-900 text-neutral-100',
+  'bg-neutral-800 text-neutral-100',
+  'bg-neutral-700 text-neutral-100',
+  'bg-neutral-600 text-neutral-100',
+  'bg-neutral-500 text-neutral-950',
+  'bg-neutral-400 text-neutral-950',
 ];
 
-function gradientFor(seed: string): string {
+function toneFor(seed: string): string {
   let h = 0;
   for (let i = 0; i < seed.length; i += 1) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  return GRADIENTS[h % GRADIENTS.length]!;
+  return AVATAR_TONES[h % AVATAR_TONES.length]!;
 }
 
 export function UserAvatar({
@@ -49,8 +50,8 @@ export function UserAvatar({
       ) : (
         <div
           className={cn(
-            'flex size-full items-center justify-center bg-gradient-to-br font-semibold text-white',
-            gradientFor(name ?? '?'),
+            'flex size-full items-center justify-center font-heading font-semibold',
+            toneFor(name ?? '?'),
           )}
         >
           {initials(name)}
@@ -94,7 +95,7 @@ export function RatingStars({
             <Star
               className={cn(
                 'size-8',
-                n <= value ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/40',
+                n <= value ? 'fill-foreground text-foreground' : 'text-muted-foreground/40',
               )}
             />
           </button>
@@ -107,7 +108,7 @@ export function RatingStars({
       className={cn('inline-flex items-center gap-1 text-[13px] font-medium', className)}
       aria-label={t('components.rating', { value })}
     >
-      <Star className="fill-amber-400 text-amber-400" style={{ width: size, height: size }} />
+      <Star className="fill-foreground text-foreground" style={{ width: size, height: size }} />
       {value > 0 ? value.toFixed(1) : '—'}
       {count !== undefined ? (
         <span className="font-normal text-muted-foreground">({count})</span>
@@ -121,13 +122,13 @@ export function OnlineBadge({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400',
+        'inline-flex items-center gap-1.5 rounded-full border border-foreground/20 bg-muted px-2 py-0.5 text-[11px] font-semibold',
         className,
       )}
     >
       <span className="relative flex size-2">
-        <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-60" />
-        <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+        <span className="absolute inline-flex size-full animate-ping rounded-full bg-foreground opacity-40" />
+        <span className="relative inline-flex size-2 rounded-full bg-foreground" />
       </span>
       {t('components.onlineNow')}
     </span>
@@ -138,7 +139,7 @@ export function PromoBadge({ pct, className }: { pct: number; className?: string
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full bg-brand px-2 py-0.5 text-[11px] font-bold text-white shadow-sm',
+        'inline-flex items-center rounded-full bg-brand px-2 py-0.5 text-[11px] font-bold text-[color:var(--brand-foreground)] shadow-sm',
         className,
       )}
     >
@@ -152,21 +153,21 @@ export function SalonBadge({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full bg-violet-500/15 px-2 py-0.5 text-[11px] font-semibold text-violet-600 dark:text-violet-300',
+        'inline-flex items-center gap-1 rounded-full border border-border bg-muted px-2 py-0.5 text-[11px] font-semibold',
         className,
       )}
     >
-      🏛 {t('components.salon')}
+      <Building2 className="size-3" /> {t('components.salon')}
     </span>
   );
 }
 
 const STATUS_STYLE: Record<AppointmentStatus, string> = {
-  PENDING: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
-  CONFIRMED: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
-  COMPLETED: 'bg-sky-500/15 text-sky-700 dark:text-sky-300',
+  PENDING: 'border border-border bg-muted',
+  CONFIRMED: 'border border-foreground/25 bg-muted',
+  COMPLETED: 'border border-foreground/40 bg-foreground/10',
   CANCELLED: 'bg-muted text-muted-foreground',
-  NO_SHOW: 'bg-rose-500/15 text-rose-700 dark:text-rose-300',
+  NO_SHOW: 'border border-destructive/30 bg-destructive/10 text-destructive',
 };
 
 export function StatusBadge({
@@ -191,10 +192,10 @@ export function StatusBadge({
 }
 
 const SUB_STYLE: Record<SubStatus, string> = {
-  TRIAL: 'bg-violet-500/15 text-violet-700 dark:text-violet-300',
-  ACTIVE: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
-  CANCELLED: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
-  EXPIRED: 'bg-rose-500/15 text-rose-700 dark:text-rose-300',
+  TRIAL: 'border border-border bg-muted',
+  ACTIVE: 'border border-foreground/25 bg-muted',
+  CANCELLED: 'border border-border bg-muted text-muted-foreground',
+  EXPIRED: 'border border-destructive/30 bg-destructive/10 text-destructive',
   BANNED: 'bg-foreground text-background',
 };
 
@@ -229,7 +230,7 @@ export function CategoryTag({
         className,
       )}
     >
-      {emoji ? <span aria-hidden>{emoji}</span> : null}
+      {emoji ? <MonoEmoji>{emoji}</MonoEmoji> : null}
       {name}
     </span>
   );

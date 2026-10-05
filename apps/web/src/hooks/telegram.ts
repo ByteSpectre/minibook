@@ -37,7 +37,7 @@ export interface MainButtonOptions {
   visible?: boolean;
 }
 
-/** Telegram MainButton with an in-app fallback rendered by <MainButtonFallback/>. */
+/** In-app primary CTA (Telegram's green MainButton is kept hidden to avoid duplicates). */
 export function useMainButton({
   text,
   onClick,
@@ -52,35 +52,22 @@ export function useMainButton({
 
   useEffect(() => {
     if (!visible) {
+      setFallback(null);
       if (inTelegram && nativeMainButton.setParams.isAvailable())
         nativeMainButton.setParams({ isVisible: false });
-      else setFallback(null);
       return;
     }
-    if (inTelegram && nativeMainButton.setParams.isAvailable()) {
-      nativeMainButton.setParams({
-        text,
-        isVisible: true,
-        isEnabled: enabled && !loading,
-        isLoaderVisible: loading,
-        hasShineEffect: enabled && !loading,
-      });
-      return;
-    }
+    // Prefer the in-app button so Telegram's green MainButton never duplicates it.
+    if (inTelegram && nativeMainButton.setParams.isAvailable())
+      nativeMainButton.setParams({ isVisible: false });
     setFallback({ text, onClick: () => handler.current(), enabled, loading });
   }, [text, enabled, loading, visible, inTelegram, setFallback]);
 
-  useEffect(() => {
-    if (!inTelegram || !nativeMainButton.onClick.isAvailable()) return;
-    const off = nativeMainButton.onClick(() => handler.current());
-    return () => off();
-  }, [inTelegram]);
-
   useEffect(
     () => () => {
+      setFallback(null);
       if (inTelegram && nativeMainButton.setParams.isAvailable())
         nativeMainButton.setParams({ isVisible: false });
-      else setFallback(null);
     },
     [inTelegram, setFallback],
   );

@@ -118,8 +118,9 @@ export const common = {
 };
 
 export const nav = {
+  menu: 'Меню',
   search: 'Поиск',
-  calendar: 'Календарь',
+  calendar: 'Записи',
   profile: 'Профиль',
   dashboard: 'Дашборд',
   schedule: 'Расписание',

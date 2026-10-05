@@ -46,11 +46,7 @@ export default function AdminDashboardPage() {
         <ErrorState onRetry={() => void refetch()} />
       ) : (
         <>
-          <GlassCard strong className="relative overflow-hidden p-5">
-            <div
-              aria-hidden
-              className="bg-brand pointer-events-none absolute -top-20 -right-10 size-48 rounded-full opacity-25 blur-3xl"
-            />
+          <GlassCard strong className="p-5">
             <div className="text-[13px] font-medium text-muted-foreground">
               {t('admin.dashboard.mrr')}
             </div>

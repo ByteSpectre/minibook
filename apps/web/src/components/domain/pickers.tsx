@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { AsYouType, type CountryCode } from 'libphonenumber-js/min';
 import { callingCodeOf, countryFlag, type CategoryDto } from '@nail-crm/shared';
 import { useCategories, useCities, useCountries } from '@/api/common';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
 import { Chip, GlassInput, GlassSheet } from '@/components/ui/glass';
 import { cn } from '@/lib/utils';
 import { categoryName } from './MasterCard';
@@ -242,7 +243,7 @@ export function CategoryChips({
     <div className={cn('no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1', className)}>
       {categories.map((c) => (
         <Chip key={c.id} active={value.includes(c.id)} onClick={() => toggle(c.id)}>
-          <span aria-hidden>{c.emoji}</span>
+          <MonoEmoji>{c.emoji}</MonoEmoji>
           {categoryName(c, i18n.language)}
         </Chip>
       ))}
@@ -276,9 +277,7 @@ export function CategoryGrid({
               active ? 'bg-foreground text-background shadow-lg' : 'glass',
             )}
           >
-            <span className="text-xl" aria-hidden>
-              {c.emoji}
-            </span>
+            <MonoEmoji className="text-xl">{c.emoji}</MonoEmoji>
             {categoryName(c, i18n.language)}
           </button>
         );

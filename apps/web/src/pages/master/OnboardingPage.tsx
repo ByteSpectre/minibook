@@ -1,6 +1,6 @@
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { masterReferral } from '@/app/startParam';
-import { TenantOnboarding } from '@/features/cabinet/TenantOnboarding';
+import { MasterOnboarding } from '@/features/cabinet/MasterOnboarding';
 import { useMe } from '@/store/auth';
 
 export default function MasterOnboardingPage() {
@@ -10,8 +10,7 @@ export default function MasterOnboardingPage() {
   const join = params.get('join');
   const [salonId, code] = join ? join.split(':') : [];
   return (
-    <TenantOnboarding
-      kind="master"
+    <MasterOnboarding
       joinSalon={salonId && code ? { salonId, code } : null}
       referrerMasterId={masterReferral()}
     />

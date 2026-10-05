@@ -59,6 +59,11 @@ const envSchema = z.object({
 
   CRON_ENABLED: bool.default(true),
   RATE_LIMIT_ENABLED: bool.default(true),
+
+  /** JS API / Geocoder key (server-side geocode proxy). */
+  YANDEX_MAPS_API_KEY: z.string().default(''),
+  /** Geosuggest key for address autocomplete proxy. Falls back to maps key. */
+  YANDEX_SUGGEST_API_KEY: z.string().default(''),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -93,4 +98,6 @@ export const config = {
     'yookassa' | 'mock',
   devAuthEnabled: env.DEV_AUTH_ENABLED && env.NODE_ENV !== 'production',
   webAppIsHttps: env.WEB_APP_URL.startsWith('https://'),
+  yandexMapsKey: env.YANDEX_MAPS_API_KEY.trim(),
+  yandexSuggestKey: (env.YANDEX_SUGGEST_API_KEY || env.YANDEX_MAPS_API_KEY).trim(),
 };

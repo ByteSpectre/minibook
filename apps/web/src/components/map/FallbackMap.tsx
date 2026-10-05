@@ -61,7 +61,8 @@ export function FallbackMap({
   showNearMe,
   className,
   height = 420,
-}: MapViewProps) {
+  yandexFailed = false,
+}: MapViewProps & { yandexFailed?: boolean }) {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 360, h: typeof height === 'number' ? height : 420 });
@@ -170,11 +171,11 @@ export function FallbackMap({
       )}
       style={{
         height,
-        backgroundColor: 'color-mix(in oklab, var(--background) 82%, #c9dcff)',
+        backgroundColor: 'var(--background)',
         backgroundImage:
-          'linear-gradient(rgba(120,110,160,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(120,110,160,0.10) 1px, transparent 1px), radial-gradient(circle at 30% 20%, rgba(255,180,210,0.35), transparent 40%), radial-gradient(circle at 80% 70%, rgba(170,190,255,0.35), transparent 45%)',
-        backgroundSize: '64px 64px, 64px 64px, 100% 100%, 100% 100%',
-        backgroundPosition: `${gridOffset.x}px ${gridOffset.y}px, ${gridOffset.x}px ${gridOffset.y}px, 0 0, 0 0`,
+          'linear-gradient(color-mix(in srgb, var(--foreground) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--foreground) 8%, transparent) 1px, transparent 1px)',
+        backgroundSize: '64px 64px, 64px 64px',
+        backgroundPosition: `${gridOffset.x}px ${gridOffset.y}px, ${gridOffset.x}px ${gridOffset.y}px`,
       }}
       onWheel={(e) => {
         const rect = ref.current!.getBoundingClientRect();
@@ -277,7 +278,7 @@ export function FallbackMap({
           className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
           style={{ left: toScreen(user).x, top: toScreen(user).y }}
         >
-          <span className="block size-4 rounded-full border-[3px] border-white bg-sky-500 shadow-lg" />
+          <span className="block size-4 rounded-full border-[3px] border-background bg-foreground shadow-lg" />
         </div>
       ) : null}
 
@@ -309,7 +310,9 @@ export function FallbackMap({
         </button>
       ) : null}
       <div className="pointer-events-none absolute inset-x-3 bottom-2 text-center text-[11px] text-muted-foreground">
-        {onPick && !picked ? t('components.map.pickHint') : t('components.map.fallback')}
+        {onPick && !picked
+          ? t('components.map.pickHint')
+          : t(yandexFailed ? 'components.map.yandexFailedHint' : 'components.map.fallback')}
       </div>
     </div>
   );

@@ -1,4 +1,15 @@
-import { CalendarPlus, Check, MapPin, RefreshCw, Repeat2, Star, X } from 'lucide-react';
+import {
+  CalendarPlus,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  RefreshCw,
+  Repeat2,
+  Search,
+  Star,
+  X,
+} from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -14,7 +25,7 @@ import {
   useReviewAppointment,
 } from '@/api/clientApi';
 import { Page } from '@/components/layout/Page';
-import { EmptyState, ErrorState, ListSkeleton } from '@/components/layout/states';
+import { ErrorState, ListSkeleton } from '@/components/layout/states';
 import { ClientAppointmentCard } from '@/components/domain/appointments';
 import { RatingStars } from '@/components/domain/badges';
 import { BeforeAfterGallery, PhotoStrip } from '@/components/domain/media';
@@ -231,10 +242,15 @@ function ReviewSheet({
 }
 
 export default function CalendarPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const { data, isLoading, isError, refetch } = useMyAppointments();
   const [tab, setTab] = useState<'upcoming' | 'past'>('upcoming');
+  const [cursor, setCursor] = useState(() => {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+  });
   const [rescheduleId, setRescheduleId] = useState<string | null>(params.get('reschedule'));
   const [repeatId, setRepeatId] = useState<string | null>(null);
   const [reviewId, setReviewId] = useState<string | null>(params.get('review'));
@@ -245,6 +261,15 @@ export default function CalendarPage() {
 
   const all = useMemo(() => [...(data?.upcoming ?? []), ...(data?.past ?? [])], [data]);
   const find = (id: string | null) => all.find((a) => a.id === id) ?? null;
+
+  const monthLabel = useMemo(
+    () =>
+      cursor.toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'ru-RU', {
+        month: 'long',
+        year: 'numeric',
+      }),
+    [cursor, i18n.language],
+  );
 
   useEffect(() => {
     if (!data) return;
@@ -263,32 +288,80 @@ export default function CalendarPage() {
 
   const clearParams = () => setParams({}, { replace: true });
   const list = tab === 'upcoming' ? (data?.upcoming ?? []) : (data?.past ?? []);
+  const shiftMonth = (dir: -1 | 1) =>
+    setCursor((d) => new Date(d.getFullYear(), d.getMonth() + dir, 1));
 
   return (
-    <Page title={t('client.calendar.title')}>
+    <Page
+      title={
+        <div className="flex w-full items-center justify-center gap-3">
+          <button
+            type="button"
+            aria-label="prev"
+            className="flex size-8 items-center justify-center rounded-full text-muted-foreground active:bg-muted"
+            onClick={() => shiftMonth(-1)}
+          >
+            <ChevronLeft className="size-5" />
+          </button>
+          <span className="min-w-[10rem] text-center capitalize">{monthLabel}</span>
+          <button
+            type="button"
+            aria-label="next"
+            className="flex size-8 items-center justify-center rounded-full text-muted-foreground active:bg-muted"
+            onClick={() => shiftMonth(1)}
+          >
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
+      }
+      largeTitle={false}
+    >
       <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
-        <TabsList className="glass grid h-11 w-full grid-cols-2 rounded-2xl p-1">
-          <TabsTrigger value="upcoming" className="rounded-xl">
-            {t('client.calendar.upcoming')}{' '}
-            {data?.upcoming.length ? `· ${data.upcoming.length}` : ''}
-          </TabsTrigger>
-          <TabsTrigger value="past" className="rounded-xl">
-            {t('client.calendar.past')}
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex items-center justify-between px-1">
+          <TabsList className="h-auto gap-4 bg-transparent p-0">
+            <TabsTrigger
+              value="upcoming"
+              className="rounded-none border-0 bg-transparent px-0 text-[13px] font-semibold uppercase tracking-wide shadow-none data-active:bg-transparent data-active:text-foreground data-active:shadow-none"
+            >
+              {t('client.calendar.list')}
+              {data?.upcoming.length ? ` · ${data.upcoming.length}` : ''}
+            </TabsTrigger>
+            <TabsTrigger
+              value="past"
+              className="rounded-none border-0 bg-transparent px-0 text-[13px] font-semibold uppercase tracking-wide shadow-none data-active:bg-transparent data-active:text-foreground data-active:shadow-none"
+            >
+              {t('client.calendar.past')}
+            </TabsTrigger>
+          </TabsList>
+        </div>
       </Tabs>
 
-      {isLoading ? (
+      {isLoading && !data ? (
         <ListSkeleton count={3} />
       ) : isError ? (
         <ErrorState onRetry={() => void refetch()} />
       ) : list.length === 0 ? (
-        <EmptyState
-          emoji={tab === 'upcoming' ? '🗓' : '📖'}
-          title={
-            tab === 'upcoming' ? t('client.calendar.emptyUpcoming') : t('client.calendar.emptyPast')
-          }
-        />
+        <div className="flex flex-col items-center gap-4 py-16 text-center">
+          <p className="text-[16px] text-muted-foreground">
+            {tab === 'upcoming'
+              ? t('client.calendar.emptyUpcoming')
+              : t('client.calendar.emptyPast')}
+          </p>
+          {tab === 'upcoming' ? (
+            <>
+              <p className="max-w-xs text-[13px] text-muted-foreground">
+                {t('client.calendar.emptyHint')}
+              </p>
+              <GlassButton
+                variant="primary"
+                className="rounded-full px-6"
+                onClick={() => navigate('/client/search')}
+              >
+                <Search className="size-4" /> {t('client.calendar.find')}
+              </GlassButton>
+            </>
+          ) : null}
+        </div>
       ) : (
         <div className="flex flex-col gap-3">
           {list.map((a) => (
@@ -367,8 +440,8 @@ export default function CalendarPage() {
                       </GlassButton>
                     ) : a.review ? (
                       <span className="flex h-9 items-center gap-1 px-1 text-[13px] text-muted-foreground">
-                        <Star className="size-4 fill-amber-400 text-amber-400" /> {a.review.rating}{' '}
-                        · {t('client.calendar.reviewed')}
+                        <Star className="size-4 fill-foreground text-foreground" />{' '}
+                        {a.review.rating} · {t('client.calendar.reviewed')}
                       </span>
                     ) : null}
                   </>

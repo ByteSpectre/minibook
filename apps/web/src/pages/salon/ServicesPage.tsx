@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useSalonMasters, useSalonProfile, useSalonServices } from '@/api/cabinetApi';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
 import { Page } from '@/components/layout/Page';
 import { EmptyState, ErrorState, ListSkeleton } from '@/components/layout/states';
 import { UserAvatar } from '@/components/domain/badges';
@@ -26,7 +27,7 @@ export default function SalonServicesPage() {
       ) : services.isError ? (
         <ErrorState onRetry={() => void services.refetch()} />
       ) : !groups.length ? (
-        <EmptyState emoji="💅" title={t('salon.services.empty')} />
+        <EmptyState emoji="✦" title={t('salon.services.empty')} />
       ) : (
         groups.map(({ master, services: list }) => (
           <section key={master.id}>
@@ -46,10 +47,10 @@ export default function SalonServicesPage() {
                       <img
                         src={assetUrl(s.imageUrl)}
                         alt=""
-                        className="size-9 rounded-xl object-cover"
+                        className="size-9 rounded-xl object-cover grayscale"
                       />
                     ) : (
-                      '💅'
+                      <MonoEmoji>✦</MonoEmoji>
                     )
                   }
                   title={s.name}

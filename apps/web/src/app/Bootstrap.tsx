@@ -1,8 +1,9 @@
+import { Lock } from 'lucide-react';
 import { useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { AuthResponse, MeDto } from '@nail-crm/shared';
 import { request } from '@/api/client';
-import { FullscreenSpinner } from '@/components/layout/states';
+import { LoadScreen } from '@/components/layout/LoadScreen';
 import { GlassButton, GlassCard } from '@/components/ui/glass';
 import { initialLanguage, setLanguage } from '@/lib/i18n';
 import { initTelegram, setHeaderColors } from '@/lib/telegram';
@@ -15,7 +16,7 @@ const DEV_AUTH = (import.meta.env.VITE_DEV_AUTH as string | undefined) !== 'fals
 
 function applyColorScheme(scheme: 'light' | 'dark') {
   document.documentElement.classList.toggle('dark', scheme === 'dark');
-  setHeaderColors(scheme === 'dark' ? '#0e0c13' : '#f7f4fb');
+  setHeaderColors(scheme === 'dark' ? '#050505' : '#f5f0e8');
 }
 
 let booted = false;
@@ -80,14 +81,14 @@ export function Bootstrap({ children }: { children: ReactNode }) {
     return () => media.removeEventListener('change', onChange);
   }, []);
 
-  if (status === 'booting') return <FullscreenSpinner />;
+  if (status === 'booting') return <LoadScreen />;
   if (status === 'needsLogin') return <DevLoginPage />;
   if (status === 'outsideTelegram') return <OpenInTelegramPage />;
   if (status === 'error') {
     return (
       <div className="flex min-h-dvh items-center justify-center p-6">
         <GlassCard className="flex max-w-sm flex-col items-center gap-3 p-6 text-center">
-          <div className="text-4xl">🔐</div>
+          <Lock className="size-10 text-muted-foreground" strokeWidth={1.5} />
           <div className="text-[17px] font-semibold">{t('errors.unauthorized')}</div>
           <GlassButton
             variant="primary"

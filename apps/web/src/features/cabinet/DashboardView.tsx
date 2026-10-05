@@ -65,9 +65,9 @@ export function DashboardView({
         <Link to={`${cabinet}/schedule`}>
           <GlassCard
             interactive
-            className="flex items-center gap-3 bg-gradient-to-r from-amber-400/20 to-orange-400/10 p-3.5"
+            className="flex items-center gap-3 border border-border bg-muted p-3.5"
           >
-            <BellRing className="size-5 text-amber-600" />
+            <BellRing className="size-5" />
             <span className="flex-1 text-[14px] font-medium">
               {t('master.dashboard.pending', { count: d.pendingCount })}
             </span>
@@ -124,7 +124,7 @@ export function DashboardView({
                   loading={online.close.isPending}
                   onClick={() => online.close.mutate()}
                 >
-                  <Radio className="text-emerald-500" />
+                  <Radio className="text-foreground" />
                   <span className="text-left text-[13px] whitespace-normal">
                     {t('master.dashboard.onlineActive', {
                       time: d.onlineOpenUntil ? formatTime(d.onlineOpenUntil, d.timezone) : '',
@@ -216,8 +216,8 @@ export function DashboardView({
                 <span
                   className={
                     a.status === 'PENDING'
-                      ? 'size-2.5 rounded-full bg-amber-500'
-                      : 'size-2.5 rounded-full bg-emerald-500'
+                      ? 'size-2.5 rounded-full bg-muted-foreground'
+                      : 'size-2.5 rounded-full bg-foreground'
                   }
                 />
               </Link>

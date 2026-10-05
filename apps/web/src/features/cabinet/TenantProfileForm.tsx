@@ -9,6 +9,7 @@ import {
 } from '@nail-crm/shared';
 import { useCities } from '@/api/common';
 import { Page } from '@/components/layout/Page';
+import { AddressInput } from '@/components/domain/AddressInput';
 import { CategoryGrid, CityPicker, CountryPicker } from '@/components/domain/pickers';
 import { SinglePhotoUploader } from '@/components/domain/PhotoUploader';
 import { MapView } from '@/components/map/MapView';
@@ -203,10 +204,16 @@ export function TenantProfileForm({
           />
         </Field>
         <Field label={t('master.profile.address')}>
-          <GlassInput
+          <AddressInput
             value={v.address ?? ''}
             placeholder={t('master.onboarding.addressPlaceholder')}
-            onChange={(e) => set({ address: e.target.value })}
+            onChange={(address) => set({ address })}
+            onPick={(s) =>
+              set({
+                address: s.address || s.title,
+                ...(s.lat != null && s.lng != null ? { latitude: s.lat, longitude: s.lng } : {}),
+              })
+            }
           />
         </Field>
         <MapView

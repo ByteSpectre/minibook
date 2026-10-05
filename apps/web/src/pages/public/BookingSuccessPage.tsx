@@ -28,12 +28,12 @@ export default function BookingSuccessPage() {
           initial={{ scale: 0.4, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 260, damping: 16 }}
-          className="bg-brand flex size-24 items-center justify-center rounded-full text-white shadow-2xl shadow-pink-500/40"
+          className="flex size-24 items-center justify-center rounded-full border-2 border-foreground bg-foreground text-background"
         >
           {pending ? <Clock4 className="size-11" /> : <Check className="size-12" strokeWidth={3} />}
         </motion.div>
         <div>
-          <h1 className="text-[28px] font-bold tracking-tight">
+          <h1 className="font-heading text-[28px] font-bold tracking-tight">
             {pending ? t('public.success.pendingTitle') : t('public.success.title')}
           </h1>
           <p className="mx-auto mt-1 max-w-xs text-[15px] text-muted-foreground">

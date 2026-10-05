@@ -29,8 +29,8 @@ export const bot: DeepDict<typeof ru.bot> = {
   },
   start: {
     greeting:
-      '👋 Hi, {{name}}!\n\n<b>{{app}}</b> — book beauty masters right in Telegram.\n\nWho are you?',
-    welcomeBack: 'Welcome back, {{name}}! ✨\nWhere would you like to go?',
+      '👋 Hi, {{name}}!\n\n<b>{{app}}</b> — book beauty masters right in Telegram.\n\nTap the button below to open the app:',
+    welcomeBack: 'Welcome back, {{name}}! ✨\nTap the button below to open the app:',
   },
   help: '<b>{{app}}</b> — beauty bookings.\n\n/start — choose a role\n/search — find a master\n/master — master cabinet\n/salon — salon cabinet\n/subscription — subscription status\n/promo CODE — activate a promo code\n/help — help',
   master: {

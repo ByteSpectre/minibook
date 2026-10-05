@@ -1,6 +1,5 @@
 import { authInitSchema, devLoginSchema, languagePatchSchema } from '@nail-crm/shared';
 import { config, env } from '../config';
-import { prisma } from '../db/prisma';
 import { AppError, unauthorized } from '../lib/errors';
 import { defineRouter, handle } from '../lib/http';
 import { InitDataError, validateInitData } from '../lib/telegram';
@@ -42,34 +41,6 @@ authRoutes.post(
       languageCode: body.languageCode ?? 'ru',
       photoUrl: body.photoUrl ?? null,
     });
-  }),
-);
-
-authRoutes.get(
-  '/dev-personas',
-  handle({}, async () => {
-    if (!config.devAuthEnabled) throw new AppError(403, 'devAuthDisabled', 'Dev login is disabled');
-    const users = await prisma.user.findMany({
-      where: { telegramId: { lt: 100100 } },
-      orderBy: { telegramId: 'asc' },
-      include: {
-        master: { select: { name: true } },
-        salon: { select: { name: true } },
-        clientProfile: { select: { onboardingCompleted: true } },
-      },
-      take: 30,
-    });
-    return users.map((u) => ({
-      telegramId: u.telegramId.toString(),
-      firstName: u.firstName,
-      lastName: u.lastName,
-      username: u.username,
-      photoUrl: u.photoUrl,
-      isOwner: config.ownerTelegramId === u.telegramId,
-      master: u.master?.name ?? null,
-      salon: u.salon?.name ?? null,
-      client: u.clientProfile?.onboardingCompleted ?? false,
-    }));
   }),
 );
 

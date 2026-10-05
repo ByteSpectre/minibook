@@ -20,7 +20,7 @@ export default function AdminFunnelPage() {
   const { data: f, isLoading, isError, refetch } = useFunnel();
   const max = Math.max(1, ...(f?.steps.map((s) => s.count) ?? [1]));
   return (
-    <Page title={t('admin.funnel.title')} back>
+    <Page title={t('admin.funnel.title')} back bottomInset="none">
       {isLoading ? (
         <ListSkeleton count={4} />
       ) : isError || !f ? (

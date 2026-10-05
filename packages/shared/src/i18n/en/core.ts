@@ -121,8 +121,9 @@ export const common: DeepDict<typeof ru.common> = {
 };
 
 export const nav: DeepDict<typeof ru.nav> = {
+  menu: 'Menu',
   search: 'Search',
-  calendar: 'Calendar',
+  calendar: 'Bookings',
   profile: 'Profile',
   dashboard: 'Dashboard',
   schedule: 'Schedule',

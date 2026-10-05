@@ -31,11 +31,11 @@ import { AppointmentSheet, NewAppointmentSheet, TimeBlockSheet } from './Appoint
 import { DEFAULT_WEEK, toWeeklyInput, WeeklyScheduleEditor } from './WeeklyScheduleEditor';
 
 const STATUS_BAR: Record<MasterAppointmentDto['status'], string> = {
-  PENDING: 'bg-amber-400',
-  CONFIRMED: 'bg-emerald-500',
-  COMPLETED: 'bg-sky-500',
+  PENDING: 'bg-muted-foreground/50',
+  CONFIRMED: 'bg-foreground/70',
+  COMPLETED: 'bg-foreground',
   CANCELLED: 'bg-muted-foreground/40',
-  NO_SHOW: 'bg-rose-500',
+  NO_SHOW: 'bg-destructive/80',
 };
 
 function WeeklySheet({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -192,7 +192,7 @@ export function ScheduleView({
                           className={cn(
                             'size-1.5 rounded-full',
                             c.pending > k
-                              ? 'bg-amber-400'
+                              ? 'bg-muted-foreground'
                               : active
                                 ? 'bg-background/80'
                                 : 'bg-primary',
@@ -255,7 +255,7 @@ export function ScheduleView({
       {dayQuery.isLoading ? (
         <ListSkeleton count={3} />
       ) : !data || (data.appointments.length === 0 && data.timeBlocks.length === 0) ? (
-        <EmptyState emoji="☕️" title={t('master.schedule.empty')} />
+        <EmptyState emoji="✦" title={t('master.schedule.empty')} />
       ) : (
         <div className="flex flex-col gap-2">
           {[
@@ -291,7 +291,7 @@ export function ScheduleView({
                         {item.a.client.firstName ?? '—'}
                       </span>
                       {item.a.client.isNew ? (
-                        <span className="rounded-full bg-emerald-500/15 px-1.5 text-[10px] font-semibold text-emerald-600">
+                        <span className="rounded-full border border-border bg-muted px-1.5 text-[10px] font-semibold">
                           NEW
                         </span>
                       ) : null}
@@ -303,7 +303,7 @@ export function ScheduleView({
                     <div className="mt-1 flex items-center gap-2">
                       <StatusBadge status={item.a.status} />
                       {item.a.clientConfirmedAt ? (
-                        <span className="text-[11px] font-medium text-emerald-600">
+                        <span className="text-[11px] font-medium text-muted-foreground">
                           ✓ {t('client.calendar.visitConfirmed')}
                         </span>
                       ) : null}

@@ -209,7 +209,7 @@ export function BroadcastView({
         </span>
       </GlassCard>
       {preview.data && !preview.data.canSendToday && preview.data.nextAvailableAt ? (
-        <GlassCard className="bg-amber-400/15 text-[14px]">
+        <GlassCard className="border border-border bg-muted text-[14px]">
           ⏳ {t('master.broadcast.limit', { date: formatDateTime(preview.data.nextAvailableAt) })}
         </GlassCard>
       ) : null}

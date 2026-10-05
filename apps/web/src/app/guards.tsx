@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { LoadScreen } from '@/components/layout/LoadScreen';
 import { useAuth, useMe, type Cabinet } from '@/store/auth';
 import { consumeStartParam, defaultRoute, routeForStartParam } from './startParam';
 
@@ -50,7 +51,7 @@ export function Landing() {
     const param = consumeStartParam();
     navigate(param ? routeForStartParam(param, me) : defaultRoute(me, cabinet), { replace: true });
   }, [me, cabinet, navigate]);
-  return null;
+  return <LoadScreen />;
 }
 
 export function PayReturn() {

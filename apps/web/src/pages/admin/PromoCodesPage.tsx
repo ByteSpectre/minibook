@@ -65,7 +65,7 @@ export default function AdminPromoCodesPage() {
 
   const [now] = useState(Date.now);
   return (
-    <Page title={t('admin.promo.title')} back>
+    <Page title={t('admin.promo.title')} back bottomInset="none">
       <GlassButton variant="primary" block onClick={() => setDraft(toDraft())}>
         <Plus /> {t('admin.promo.add')}
       </GlassButton>

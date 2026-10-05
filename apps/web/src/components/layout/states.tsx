@@ -1,12 +1,14 @@
 import { RefreshCw } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
+import { LoadScreen } from '@/components/layout/LoadScreen';
 import { GlassButton, GlassCard } from '@/components/ui/glass';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 export function EmptyState({
-  emoji = '✨',
+  emoji = '✦',
   title,
   text,
   action,
@@ -21,9 +23,7 @@ export function EmptyState({
   const { t } = useTranslation();
   return (
     <GlassCard className={cn('flex flex-col items-center gap-2 px-6 py-8 text-center', className)}>
-      <div className="text-4xl" aria-hidden>
-        {emoji}
-      </div>
+      <MonoEmoji className="text-4xl text-foreground">{emoji}</MonoEmoji>
       <div className="text-[16px] font-semibold">{title ?? t('common.emptyTitle')}</div>
       {text ? <p className="max-w-xs text-[14px] text-muted-foreground">{text}</p> : null}
       {action ? <div className="mt-2">{action}</div> : null}
@@ -43,8 +43,8 @@ export function ErrorState({
   const { t } = useTranslation();
   return (
     <GlassCard className={cn('flex flex-col items-center gap-2 px-6 py-8 text-center', className)}>
-      <div className="text-4xl" aria-hidden>
-        😕
+      <div className="text-4xl text-muted-foreground" aria-hidden>
+        !
       </div>
       <div className="text-[16px] font-semibold">{t('common.errorTitle')}</div>
       <p className="max-w-xs text-[14px] text-muted-foreground">{text ?? t('common.errorText')}</p>
@@ -84,18 +84,9 @@ export function ListSkeleton({ count = 3 }: { count?: number }) {
 }
 
 export function PageLoader() {
-  return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-3 px-4 pt-[calc(var(--tg-safe-top)+24px)]">
-      <Skeleton className="h-8 w-1/2 rounded-full bg-muted" />
-      <ListSkeleton count={4} />
-    </div>
-  );
+  return <LoadScreen />;
 }
 
 export function FullscreenSpinner() {
-  return (
-    <div className="flex min-h-dvh items-center justify-center">
-      <div className="size-10 animate-spin rounded-full border-[3px] border-primary/20 border-t-primary" />
-    </div>
-  );
+  return <LoadScreen />;
 }

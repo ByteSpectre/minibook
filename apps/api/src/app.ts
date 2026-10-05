@@ -11,6 +11,7 @@ import { adminRoutes } from './routes/admin.routes';
 import { authRoutes } from './routes/auth.routes';
 import { clientRoutes } from './routes/client.routes';
 import { devRoutes } from './routes/dev.routes';
+import { geoRoutes } from './routes/geo.routes';
 import { invitesRoutes } from './routes/invites.routes';
 import { masterRoutes } from './routes/master.routes';
 import { miscRoutes } from './routes/misc.routes';
@@ -67,6 +68,7 @@ export function createApp(extra?: (app: Express) => void): Express {
 
   for (const r of [
     miscRoutes,
+    geoRoutes,
     authRoutes,
     clientRoutes,
     searchRoutes,

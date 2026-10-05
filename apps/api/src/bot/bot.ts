@@ -96,27 +96,14 @@ export function createBot(token: string): Bot {
 
     const roles = await rolesOf(user.id);
     const hasAny = roles.masterId || roles.salonId || roles.client;
-    const rows: MessageButton[][] = [];
-    if (hasAny) {
-      if (roles.client) rows.push([app(t('bot.buttons.openApp'), '/client', 'go_client_home')]);
-      if (roles.masterId)
-        rows.push([app(t('bot.buttons.openMaster'), '/master', 'go_master_dashboard')]);
-      if (roles.salonId)
-        rows.push([app(t('bot.buttons.openSalon'), '/salon', 'go_salon_dashboard')]);
-    }
-    if (config.ownerTelegramId === user.telegramId)
-      rows.push([app(t('bot.buttons.openAdmin'), '/admin', 'go_admin')]);
-    if (!roles.client)
-      rows.push([app(t('bot.buttons.client'), '/onboarding/client', 'go_onboarding_client')]);
-    if (!roles.masterId)
-      rows.push([app(t('bot.buttons.master'), '/onboarding/master', 'go_onboarding_master')]);
-    if (!roles.salonId)
-      rows.push([app(t('bot.buttons.salon'), '/onboarding/salon', 'go_onboarding_salon')]);
     await ctx.reply(
       hasAny
         ? t('bot.start.welcomeBack', { name })
         : t('bot.start.greeting', { name, app: APP_NAME }),
-      { parse_mode: 'HTML', reply_markup: keyboard(rows) },
+      {
+        parse_mode: 'HTML',
+        reply_markup: keyboard([[app(t('bot.buttons.openApp'), '/client', 'go_client_home')]]),
+      },
     );
   });
 

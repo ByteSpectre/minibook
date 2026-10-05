@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SlotsResponse } from '@nail-crm/shared';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
 import { Calendar } from '@/components/ui/calendar';
 import { GlassCard } from '@/components/ui/glass';
 import { dateFromIsoDay, dateLocale, isoDayOf } from '@/lib/format';
@@ -88,7 +89,7 @@ export function TimeSlotGrid({
       {data.periods.map((period) => (
         <section key={period.key}>
           <h3 className="mb-2 flex items-center gap-1.5 px-1 text-[13px] font-semibold text-muted-foreground">
-            <span aria-hidden>{period.emoji}</span>
+            <MonoEmoji>{period.emoji}</MonoEmoji>
             {t(`enums.period.${period.key}`)}
           </h3>
           <div className="grid grid-cols-4 gap-2">

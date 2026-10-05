@@ -64,7 +64,7 @@ export default function SearchMapPage() {
           active={filters.onlineNow}
           onClick={() => update({ ...filters, onlineNow: !filters.onlineNow })}
         >
-          <span className="size-2 rounded-full bg-emerald-500" /> {t('client.home.onlineNow')}
+          <span className="size-2 rounded-full bg-foreground" /> {t('client.home.onlineNow')}
         </Chip>
         <CategoryChips
           className="mx-0 px-0"

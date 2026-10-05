@@ -3,6 +3,8 @@ import {
   ChevronRight,
   Clock,
   FileText,
+  Gift,
+  Heart,
   MapPin,
   Megaphone,
   Send,
@@ -13,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import type { PublicMasterDto, ReviewDto, ServiceDto } from '@nail-crm/shared';
 import { usePublicPage, usePublicReviews } from '@/api/publicApi';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
 import { Page } from '@/components/layout/Page';
 import { ErrorState, PageLoader } from '@/components/layout/states';
 import { CategoryTag, OnlineBadge, RatingStars, UserAvatar } from '@/components/domain/badges';
@@ -78,7 +81,9 @@ function ServiceRow({
         {image ? (
           <img src={image} alt="" loading="lazy" className="size-full object-cover" />
         ) : (
-          <div className="flex size-full items-center justify-center text-2xl">💅</div>
+          <div className="flex size-full items-center justify-center text-2xl text-muted-foreground">
+            <MonoEmoji>✦</MonoEmoji>
+          </div>
         )}
       </div>
       <div className="min-w-0 flex-1">
@@ -222,12 +227,16 @@ function MasterContent({ master }: { master: PublicMasterDto }) {
 
       {master.promotions.length ? (
         <section>
-          <SectionTitle>🎁 {t('public.promotions')}</SectionTitle>
+          <SectionTitle>
+            <span className="inline-flex items-center gap-2">
+              <Gift className="size-4" /> {t('public.promotions')}
+            </span>
+          </SectionTitle>
           <div className="no-scrollbar -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1">
             {master.promotions.map((p) => (
               <GlassCard
                 key={p.id}
-                className="flex w-[270px] shrink-0 snap-start flex-col gap-2 bg-gradient-to-br from-pink-500/10 to-violet-500/10"
+                className="flex w-[270px] shrink-0 snap-start flex-col gap-2 border border-foreground/10"
               >
                 <div className="flex items-start justify-between gap-2">
                   <span className="text-[15px] leading-snug font-semibold">{p.title}</span>
@@ -262,7 +271,9 @@ function MasterContent({ master }: { master: PublicMasterDto }) {
 
       {master.loyaltyRules.length ? (
         <GlassCard className="flex flex-col gap-3">
-          <h2 className="text-[16px] font-semibold">💝 {t('public.loyalty')}</h2>
+          <h2 className="flex items-center gap-2 text-[16px] font-semibold">
+            <Heart className="size-4" /> {t('public.loyalty')}
+          </h2>
           {master.loyaltyProgress ? <LoyaltyProgressBar progress={master.loyaltyProgress} /> : null}
           <ul className="flex flex-col gap-1.5">
             {master.loyaltyRules.map((r) => (
@@ -301,7 +312,7 @@ function MasterContent({ master }: { master: PublicMasterDto }) {
                             className="size-full object-cover"
                           />
                         ) : (
-                          (g.category?.emoji ?? '✨')
+                          <MonoEmoji>{g.category?.emoji ?? '✦'}</MonoEmoji>
                         )}
                       </span>
                       <span className="text-[16px] font-semibold">

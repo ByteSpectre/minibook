@@ -101,11 +101,7 @@ export function SubscriptionView({ base }: { base: CabinetBase }) {
       {!s ? (
         <CardSkeleton lines={4} />
       ) : (
-        <GlassCard strong className="relative flex flex-col gap-4 overflow-hidden p-5">
-          <div
-            aria-hidden
-            className="bg-brand pointer-events-none absolute -top-16 -right-16 size-44 rounded-full opacity-25 blur-3xl"
-          />
+        <GlassCard strong className="flex flex-col gap-4 p-5">
           <div className="flex items-center justify-between">
             <span className="text-[13px] font-medium text-muted-foreground">
               {t('master.subscription.status')}

@@ -11,6 +11,7 @@ import {
   useClients,
   type CabinetBase,
 } from '@/api/cabinetApi';
+import { MonoEmoji } from '@/components/brand/MonoEmoji';
 import { EmptyState, ErrorState, ListSkeleton, PageLoader } from '@/components/layout/states';
 import { StatusBadge, UserAvatar } from '@/components/domain/badges';
 import { LoyaltyProgressBar } from '@/components/domain/loyalty';
@@ -228,7 +229,11 @@ export function ClientDetailView({
         <div className="min-w-0 flex-1">
           <div className="truncate text-[20px] font-semibold">{c.firstName ?? '—'}</div>
           <div className="text-[13px] text-muted-foreground">
-            {c.birthday ? `🎂 ${formatDate(c.birthday)}` : null}{' '}
+            {c.birthday ? (
+              <span className="inline-flex items-center gap-1">
+                <MonoEmoji>✦</MonoEmoji> {formatDate(c.birthday)}
+              </span>
+            ) : null}{' '}
             {c.gender ? `· ${t(`enums.gender.${c.gender}`)}` : null}
           </div>
           {c.isBlacklisted ? (

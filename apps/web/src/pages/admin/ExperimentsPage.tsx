@@ -124,7 +124,7 @@ export default function AdminExperimentsPage() {
     );
 
   return (
-    <Page title={t('admin.experiments.title')} back>
+    <Page title={t('admin.experiments.title')} back bottomInset="none">
       <GlassButton variant="primary" block onClick={() => setDraft(toDraft())}>
         <Plus /> {t('admin.experiments.add')}
       </GlassButton>

@@ -1,5 +1,6 @@
 import { Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BrandLogo } from '@/components/brand/BrandLogo';
 import { Backdrop } from '@/components/layout/AppShell';
 import { GlassButton, GlassCard } from '@/components/ui/glass';
 
@@ -10,8 +11,8 @@ export function OpenInTelegramPage() {
     <div className="relative flex min-h-dvh items-center justify-center p-6">
       <Backdrop />
       <GlassCard strong className="flex max-w-sm flex-col items-center gap-3 p-8 text-center">
-        <div className="text-5xl">✨</div>
-        <h1 className="text-[22px] font-semibold">{t('start.openInTelegram')}</h1>
+        <BrandLogo size={64} />
+        <h1 className="font-heading text-[22px] font-semibold">{t('start.openInTelegram')}</h1>
         <p className="text-[15px] text-muted-foreground">{t('start.openInTelegramText')}</p>
         <GlassButton asChild variant="primary" className="mt-2">
           <a href={`https://t.me/${bot}`}>

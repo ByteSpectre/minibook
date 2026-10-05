@@ -1,20 +1,33 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { hasYandexMapsKey } from './config';
 import { FallbackMap } from './FallbackMap';
 import type { MapViewProps } from './types';
 
 const YandexMap = lazy(() => import('./YandexMap'));
-const hasYandexKey = !!(import.meta.env.VITE_YANDEX_MAPS_API_KEY as string | undefined);
 
 export function MapView(props: MapViewProps) {
-  if (!hasYandexKey) return <FallbackMap {...props} />;
+  const { t } = useTranslation();
+  const [yandexFailed, setYandexFailed] = useState(false);
+
+  const onYandexError = () => {
+    setYandexFailed(true);
+    toast.error(t('components.map.yandexFailed'));
+  };
+
+  if (!hasYandexMapsKey || yandexFailed) {
+    return <FallbackMap {...props} yandexFailed={hasYandexMapsKey && yandexFailed} />;
+  }
+
   return (
     <Suspense
       fallback={
         <Skeleton className="w-full rounded-3xl bg-muted" style={{ height: props.height ?? 420 }} />
       }
     >
-      <YandexMap {...props} />
+      <YandexMap {...props} onLoadError={onYandexError} />
     </Suspense>
   );
 }

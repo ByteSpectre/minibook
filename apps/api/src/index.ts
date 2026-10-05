@@ -20,16 +20,21 @@ async function main(): Promise<void> {
     }
   });
 
-  const server = app.listen(env.PORT, () => {
+  const server = app.listen(env.PORT, '0.0.0.0', () => {
     logger.info(
       {
         port: env.PORT,
+        host: '0.0.0.0',
         payments: config.paymentProvider,
         bot: bot ? env.BOT_MODE : 'mock',
         devAuth: config.devAuthEnabled,
       },
       'API listening',
     );
+  });
+  server.on('error', (err: NodeJS.ErrnoException) => {
+    logger.fatal({ err, port: env.PORT }, 'Failed to bind API port');
+    process.exit(1);
   });
 
   if (bot) {

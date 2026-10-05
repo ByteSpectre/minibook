@@ -626,8 +626,37 @@ export async function getAdminSettings(): Promise<PlatformSettingsDto> {
     periodDays: env.SUBSCRIPTION_PERIOD_DAYS,
     paymentProvider: config.paymentProvider,
     botConnected: config.botEnabled,
-    yandexMapsConfigured: false,
+    yandexMapsConfigured: Boolean(config.yandexMapsKey),
   };
 }
 
 export { updatePlatformSettings };
+
+export async function resetOwnerProfile(
+  userId: string,
+  kind: 'client' | 'master' | 'salon',
+): Promise<void> {
+  await prisma.$transaction(async (tx) => {
+    if (kind === 'client') {
+      const profile = await tx.clientProfile.findUnique({ where: { userId } });
+      if (!profile) throw new NotFoundError('Client profile not found');
+      await tx.clientProfile.delete({ where: { userId } });
+      await tx.userRole.deleteMany({ where: { userId, role: 'CLIENT' } });
+      await tx.onboardingDraft.deleteMany({ where: { userId, role: 'CLIENT' } });
+      return;
+    }
+    if (kind === 'master') {
+      const master = await tx.master.findUnique({ where: { userId } });
+      if (!master) throw new NotFoundError('Master profile not found');
+      await tx.master.delete({ where: { id: master.id } });
+      await tx.userRole.deleteMany({ where: { userId, role: 'MASTER' } });
+      await tx.onboardingDraft.deleteMany({ where: { userId, role: 'MASTER' } });
+      return;
+    }
+    const salon = await tx.salon.findUnique({ where: { ownerId: userId } });
+    if (!salon) throw new NotFoundError('Salon profile not found');
+    await tx.salon.delete({ where: { id: salon.id } });
+    await tx.userRole.deleteMany({ where: { userId, role: 'SALON' } });
+    await tx.onboardingDraft.deleteMany({ where: { userId, role: 'SALON' } });
+  });
+}

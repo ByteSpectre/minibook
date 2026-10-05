@@ -6,6 +6,7 @@ import type {
   AdminPaymentRowDto,
   AdminStatsDto,
   AdminTenantRowDto,
+  AuthResponse,
   CategoryUpsertInput,
   CityUpsertInput,
   CountryUpsertInput,
@@ -17,6 +18,7 @@ import type {
   PlatformSettingsPatchInput,
   PromoCodeDto,
   PromoCodeUpsertInput,
+  ResetOwnerProfileInput,
   SubStatus,
   TenantActionInput,
   TenantKind,
@@ -114,3 +116,14 @@ export function usePatchAdminSettings() {
 
 export const useSendDigest = () =>
   useMutation({ mutationFn: () => api.post<{ sent: number }>(`${A}/digest/send`, {}) });
+
+export function useResetOwnerProfile() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: ResetOwnerProfileInput) =>
+      api.post<AuthResponse>(`${A}/reset-profile`, input),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['admin'] });
+    },
+  });
+}

@@ -5,7 +5,7 @@ import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const target = env.VITE_API_PROXY_TARGET || 'http://localhost:4420';
+  const target = env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:4420';
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
       allowedHosts: true,
       proxy: {
+        // Prefer 127.0.0.1 over localhost — on Windows Node often gets EACCES via ::1.
         '/api': { target, changeOrigin: true },
         '/uploads': { target, changeOrigin: true },
       },
