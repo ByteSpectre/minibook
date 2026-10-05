@@ -1,8 +1,8 @@
 import compression from 'compression';
 import cors from 'cors';
 import express, { type Express } from 'express';
-import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
+import { default as helmet } from 'helmet';
 import { pinoHttp } from 'pino-http';
 import { config, env } from './config';
 import { errorHandler, NotFoundError } from './lib/errors';
