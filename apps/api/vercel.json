@@ -3,12 +3,5 @@
   "framework": null,
   "installCommand": "cd ../.. && corepack enable && pnpm install --frozen-lockfile",
   "buildCommand": "pnpm db:generate",
-  "regions": ["fra1"],
-  "functions": {
-    "src/index.ts": {
-      "maxDuration": 60,
-      "memory": 1024,
-      "includeFiles": "src/generated/**"
-    }
-  }
+  "regions": ["fra1"]
 }
