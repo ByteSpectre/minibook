@@ -46,9 +46,14 @@ geoRoutes.get(
       url.searchParams.set('print_address', '1');
       url.searchParams.set('types', 'street,house,geo,locality');
 
-      const res = await fetch(url.toString(), {
+      const res = (await fetch(url.toString(), {
         headers: { Referer: config.webAppUrl || 'http://localhost:5420' },
-      });
+      })) as unknown as {
+        ok: boolean;
+        status: number;
+        text: () => Promise<string>;
+        json: () => Promise<unknown>;
+      };
       if (!res.ok) {
         const body = await res.text().catch(() => '');
         throw badRequest(
@@ -92,9 +97,14 @@ geoRoutes.get(
       url.searchParams.set('lang', query.lang?.startsWith('en') ? 'en_US' : 'ru_RU');
       url.searchParams.set('results', '1');
 
-      const res = await fetch(url.toString(), {
+      const res = (await fetch(url.toString(), {
         headers: { Referer: config.webAppUrl || 'http://localhost:5420' },
-      });
+      })) as unknown as {
+        ok: boolean;
+        status: number;
+        text: () => Promise<string>;
+        json: () => Promise<unknown>;
+      };
       if (!res.ok) {
         const body = await res.text().catch(() => '');
         throw badRequest(

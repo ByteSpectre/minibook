@@ -176,6 +176,8 @@ export const client: DeepDict<typeof ru.client> = {
     myMastersEmpty: 'Masters you book with will appear here',
     myMastersNone: 'Nothing yet',
     myMastersCount_one: '{{count}} master',
+    myMastersCount_few: '{{count}} masters',
+    myMastersCount_many: '{{count}} masters',
     myMastersCount_other: '{{count}} masters',
     myAppointments: 'My bookings',
     myAppointmentsHint: 'Upcoming and past',

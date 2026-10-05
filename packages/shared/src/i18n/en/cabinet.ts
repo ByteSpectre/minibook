@@ -255,7 +255,8 @@ export const master: DeepDict<typeof ru.master> = {
     manageCategories: 'Categories',
     stats: '{{count}} services · {{cats}} cat.',
     stats_one: '{{count}} service · {{cats}} cat.',
-    stats_other: '{{count}} services · {{cats}} cat.',
+    stats_few: '{{count}} services · {{cats}} cat.',
+    stats_many: '{{count}} services · {{cats}} cat.',
     onboardingTitle: 'Build your service catalog',
     onboardingStep1: 'Pick search categories',
     onboardingStep1Hint: 'e.g. “Manicure” or “Brows”',
@@ -280,6 +281,8 @@ export const master: DeepDict<typeof ru.master> = {
     deleteConfirm: 'Delete the review?',
     average: 'Average rating',
     count_one: '{{count}} review',
+    count_few: '{{count}} reviews',
+    count_many: '{{count}} reviews',
     count_other: '{{count}} reviews',
   },
   analytics: {
