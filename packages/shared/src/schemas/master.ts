@@ -117,7 +117,9 @@ export const settingsPatchSchema = z
     slotStep: z
       .number()
       .int()
-      .refine((v) => (SLOT_STEPS as readonly number[]).includes(v), { error: 'validation.slotStep' }),
+      .refine((v) => (SLOT_STEPS as readonly number[]).includes(v), {
+        error: 'validation.slotStep',
+      }),
     bufferMinutes: z.number().int().min(0).max(120),
     minLeadMinutes: z.number().int().min(0).max(2880),
     bookingHorizonDays: z.number().int().min(1).max(LIMITS.maxBookingHorizonDays),

@@ -29,8 +29,7 @@ export const bot = {
       '👋 Привет, {{name}}!\n\n<b>{{app}}</b> — запись к мастерам красоты прямо в Telegram.\n\nВыберите, кто вы:',
     welcomeBack: 'С возвращением, {{name}}! ✨\nВыберите, куда перейти:',
   },
-  help:
-    '<b>{{app}}</b> — запись к мастерам красоты.\n\n/start — выбрать роль\n/search — найти мастера\n/master — кабинет мастера\n/salon — кабинет салона\n/subscription — статус подписки\n/promo КОД — активировать промокод\n/help — помощь',
+  help: '<b>{{app}}</b> — запись к мастерам красоты.\n\n/start — выбрать роль\n/search — найти мастера\n/master — кабинет мастера\n/salon — кабинет салона\n/subscription — статус подписки\n/promo КОД — активировать промокод\n/help — помощь',
   master: {
     open: 'Кабинет мастера:',
     notRegistered: 'У вас ещё нет кабинета мастера. Нажмите /start и выберите «Я мастер».',
@@ -59,9 +58,9 @@ export const bot = {
       '🆕 <b>Новая запись</b>\n\n👤 {{client}}\n💅 {{services}}\n🗓 {{date}}, {{time}}\n💰 {{price}}',
     newAppointmentPending: '\n\nЗапись ждёт вашего подтверждения.',
     clientComment: '\n💬 {{comment}}',
-    cancelledByClient: '❌ <b>Отмена записи</b>\n{{client}} отменил(а) запись на {{date}}, {{time}}.',
-    rescheduledByClient:
-      '🔄 <b>Перенос записи</b>\n{{client}}: {{oldDate}} → <b>{{newDate}}</b>',
+    cancelledByClient:
+      '❌ <b>Отмена записи</b>\n{{client}} отменил(а) запись на {{date}}, {{time}}.',
+    rescheduledByClient: '🔄 <b>Перенос записи</b>\n{{client}}: {{oldDate}} → <b>{{newDate}}</b>',
     clientConfirmed: '✅ {{client}} подтвердил(а), что придёт {{date}} в {{time}}.',
     reminder30: '⏰ Через 30 минут: {{client}} — {{services}} в {{time}}.',
     eveningSummary_one:
@@ -125,7 +124,8 @@ export const bot = {
     reviewRequest: 'Как вам визит к {{master}}? Оставьте отзыв — это очень помогает мастеру ⭐️',
     slotAlert: '🔥 У {{master}} освободилось окно: <b>{{date}} в {{time}}</b>. Успейте записаться!',
     onlineOpen: '🟢 {{master}} свободен(на) прямо сейчас — до {{until}}. Можно записаться!',
-    birthday: '🎉 {{name}}, с днём рождения! {{master}} дарит вам скидку {{pct}}% на визит в ближайшие дни.',
+    birthday:
+      '🎉 {{name}}, с днём рождения! {{master}} дарит вам скидку {{pct}}% на визит в ближайшие дни.',
     sleepingDefault: '{{name}}, давно не виделись! {{master}} будет рад(а) видеть вас снова 💅',
     unsubscribeHint: '\n\n<i>Отключить рассылки можно в профиле приложения.</i>',
     promotion: '🎁 <b>{{title}}</b> — скидка {{pct}}%\n{{description}}',

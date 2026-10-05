@@ -186,7 +186,9 @@ export function computeLoyaltyProgress(
   }
   const pending = options.filter((o) => !o.unlocked);
   if (pending.length > 0) {
-    return pending.sort((a, b) => a.remaining - b.remaining || b.discountPct - a.discountPct)[0] ?? null;
+    return (
+      pending.sort((a, b) => a.remaining - b.remaining || b.discountPct - a.discountPct)[0] ?? null
+    );
   }
   return options.sort((a, b) => b.discountPct - a.discountPct)[0] ?? null;
 }

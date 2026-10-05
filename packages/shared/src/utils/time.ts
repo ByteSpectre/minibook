@@ -59,7 +59,9 @@ export function daysFromBirthday(birthday: string | Date, day: string): number {
     const date = Math.min(b.getUTCDate(), new Date(Date.UTC(y, month + 1, 0)).getUTCDate());
     return Date.UTC(y, month, date);
   });
-  return Math.min(...candidates.map((ts) => Math.abs(Math.round((ts - target.getTime()) / 86400000))));
+  return Math.min(
+    ...candidates.map((ts) => Math.abs(Math.round((ts - target.getTime()) / 86400000))),
+  );
 }
 
 export interface PeriodConfig {
@@ -85,14 +87,18 @@ export interface ResolvedPeriod extends DayPeriodDefinition {
 
 export function resolvePeriods(config?: Partial<PeriodConfig> | null): ResolvedPeriod[] {
   return DEFAULT_DAY_PERIODS.map((def) => {
-    const enabled = (config?.[`${def.key}Enabled` as const] as boolean | undefined) ?? def.key !== 'night';
+    const enabled =
+      (config?.[`${def.key}Enabled` as const] as boolean | undefined) ?? def.key !== 'night';
     const start = (config?.[`${def.key}Start` as const] as string | undefined) ?? def.start;
     const end = (config?.[`${def.key}End` as const] as string | undefined) ?? def.end;
     return { ...def, enabled, start, end, startMin: toMinutes(start), endMin: toMinutes(end) };
   });
 }
 
-export function periodOfMinute(minute: number, periods: ResolvedPeriod[]): ResolvedPeriod | undefined {
+export function periodOfMinute(
+  minute: number,
+  periods: ResolvedPeriod[],
+): ResolvedPeriod | undefined {
   return periods.find((p) => minute >= p.startMin && minute < p.endMin);
 }
 

@@ -46,7 +46,13 @@ export function accessFlags(status: SubStatus): AccessFlags {
     case 'EXPIRED':
       return { isPublic: false, canRead: true, canWrite: false, canNotify: false, canExport: true };
     case 'BANNED':
-      return { isPublic: false, canRead: false, canWrite: false, canNotify: false, canExport: true };
+      return {
+        isPublic: false,
+        canRead: false,
+        canWrite: false,
+        canNotify: false,
+        canExport: true,
+      };
   }
 }
 

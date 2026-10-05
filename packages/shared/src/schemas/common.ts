@@ -69,7 +69,13 @@ export const longitudeSchema = z.number().min(-180).max(180);
 
 /** `?ids=a,b,c` → `['a','b','c']`. */
 export const csvIdsSchema = z.preprocess(
-  (v) => (typeof v === 'string' ? v.split(',').map((s) => s.trim()).filter(Boolean) : v),
+  (v) =>
+    typeof v === 'string'
+      ? v
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : v,
   z.array(idSchema).max(20),
 );
 

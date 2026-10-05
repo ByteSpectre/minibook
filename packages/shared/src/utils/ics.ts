@@ -8,7 +8,11 @@ export interface IcsEvent {
   url?: string;
 }
 
-const fmt = (d: Date): string => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+const fmt = (d: Date): string =>
+  d
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '');
 
 const escape = (value: string): string =>
   value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');

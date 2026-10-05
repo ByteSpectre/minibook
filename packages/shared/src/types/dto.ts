@@ -93,8 +93,20 @@ export interface MeDto {
   roles: Role[];
   isOwner: boolean;
   clientOnboarded: boolean;
-  master: { id: string; slug: string; name: string; avatarUrl: string | null; access: AccessDto } | null;
-  salon: { id: string; slug: string; name: string; avatarUrl: string | null; access: AccessDto } | null;
+  master: {
+    id: string;
+    slug: string;
+    name: string;
+    avatarUrl: string | null;
+    access: AccessDto;
+  } | null;
+  salon: {
+    id: string;
+    slug: string;
+    name: string;
+    avatarUrl: string | null;
+    access: AccessDto;
+  } | null;
   pendingInvites: PendingInviteDto[];
 }
 
@@ -371,7 +383,12 @@ export interface CheckAccessResponse {
   allowed: boolean;
   reason: 'blocked' | 'expired' | null;
   screen: BlockedScreenDto | null;
-  contact: { firstName: string | null; phone: string | null; phoneCountry: string | null; username: string | null };
+  contact: {
+    firstName: string | null;
+    phone: string | null;
+    phoneCountry: string | null;
+    username: string | null;
+  };
   clientId: string | null;
 }
 
@@ -399,7 +416,11 @@ export interface QuoteResponse {
   durationMin: number;
   totalPrice: number;
   discountPct: number | null;
-  discountSource: { source: 'loyalty' | 'promotion'; loyaltyType?: LoyaltyType; title?: string } | null;
+  discountSource: {
+    source: 'loyalty' | 'promotion';
+    loyaltyType?: LoyaltyType;
+    title?: string;
+  } | null;
   finalPrice: number;
   currency: string;
 }
@@ -560,7 +581,13 @@ export interface DashboardDto {
   loadByWeekday: { dayOfWeek: number; count: number; minutes: number }[];
   topClients: { id: string; name: string; visits: number; spent: number }[];
   topServices: { id: string; name: string; count: number; revenue: number }[];
-  sleepingClients: { id: string; name: string; lastVisitAt: string; daysSince: number; hasTelegram: boolean }[];
+  sleepingClients: {
+    id: string;
+    name: string;
+    lastVisitAt: string;
+    daysSince: number;
+    hasTelegram: boolean;
+  }[];
   monthLoadPct: number;
   gender: { gender: Gender | 'UNKNOWN'; count: number }[];
   ages: { bucket: string; count: number }[];
@@ -695,7 +722,14 @@ export interface InviteByUsernameResponse {
 }
 
 export interface JoinSalonPreviewDto {
-  salon: { id: string; name: string; slug: string; avatarUrl: string | null; cityName: string | null; mastersCount: number };
+  salon: {
+    id: string;
+    name: string;
+    slug: string;
+    avatarUrl: string | null;
+    cityName: string | null;
+    mastersCount: number;
+  };
   invite: { id: string; status: InviteStatus; expiresAt: string; valid: boolean };
   alreadyMember: boolean;
   isMaster: boolean;
@@ -750,7 +784,14 @@ export interface AdminPaymentRowDto extends PaymentDto {
 
 export interface FunnelDto {
   steps: { key: FunnelEventType | 'USERS'; label: string; count: number; conversionPct: number }[];
-  byRole: { role: 'MASTER' | 'SALON'; started: number; completed: number; firstAppointment: number; subscribed: number; churned: number }[];
+  byRole: {
+    role: 'MASTER' | 'SALON';
+    started: number;
+    completed: number;
+    firstAppointment: number;
+    subscribed: number;
+    churned: number;
+  }[];
   weekly: { week: string; newUsers: number; newMasters: number; subscribed: number }[];
 }
 

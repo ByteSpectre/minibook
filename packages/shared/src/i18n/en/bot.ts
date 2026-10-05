@@ -32,8 +32,7 @@ export const bot: DeepDict<typeof ru.bot> = {
       '👋 Hi, {{name}}!\n\n<b>{{app}}</b> — book beauty masters right in Telegram.\n\nWho are you?',
     welcomeBack: 'Welcome back, {{name}}! ✨\nWhere would you like to go?',
   },
-  help:
-    '<b>{{app}}</b> — beauty bookings.\n\n/start — choose a role\n/search — find a master\n/master — master cabinet\n/salon — salon cabinet\n/subscription — subscription status\n/promo CODE — activate a promo code\n/help — help',
+  help: '<b>{{app}}</b> — beauty bookings.\n\n/start — choose a role\n/search — find a master\n/master — master cabinet\n/salon — salon cabinet\n/subscription — subscription status\n/promo CODE — activate a promo code\n/help — help',
   master: {
     open: 'Master cabinet:',
     notRegistered: "You don't have a master cabinet yet. Tap /start and choose “I'm a master”.",
@@ -44,7 +43,8 @@ export const bot: DeepDict<typeof ru.bot> = {
   },
   search: { open: 'Find a master by category, city or on the map:' },
   subscription: {
-    status: '<b>{{kind}} subscription</b>\nStatus: {{status}}\nValid until: {{date}}\nLeft: {{days}}',
+    status:
+      '<b>{{kind}} subscription</b>\nStatus: {{status}}\nValid until: {{date}}\nLeft: {{days}}',
     kindMaster: 'Master',
     kindSalon: 'Salon',
     coveredBySalon: 'Your subscription is covered by the salon “{{salon}}”.',
@@ -61,8 +61,10 @@ export const bot: DeepDict<typeof ru.bot> = {
       '🆕 <b>New appointment</b>\n\n👤 {{client}}\n💅 {{services}}\n🗓 {{date}}, {{time}}\n💰 {{price}}',
     newAppointmentPending: '\n\nThe appointment is waiting for your confirmation.',
     clientComment: '\n💬 {{comment}}',
-    cancelledByClient: '❌ <b>Appointment cancelled</b>\n{{client}} cancelled the appointment on {{date}}, {{time}}.',
-    rescheduledByClient: '🔄 <b>Appointment rescheduled</b>\n{{client}}: {{oldDate}} → <b>{{newDate}}</b>',
+    cancelledByClient:
+      '❌ <b>Appointment cancelled</b>\n{{client}} cancelled the appointment on {{date}}, {{time}}.',
+    rescheduledByClient:
+      '🔄 <b>Appointment rescheduled</b>\n{{client}}: {{oldDate}} → <b>{{newDate}}</b>',
     clientConfirmed: '✅ {{client}} confirmed the visit on {{date}} at {{time}}.',
     reminder30: '⏰ In 30 minutes: {{client}} — {{services}} at {{time}}.',
     eveningSummary_one:
@@ -88,7 +90,8 @@ export const bot: DeepDict<typeof ru.bot> = {
     endsToday: '⚠️ Your subscription ends today. Renew it to keep your clients.',
     expired:
       '🔒 Your subscription has expired.\nYour page is hidden from search and new bookings are disabled. Your data is safe — pay to continue.',
-    paymentSucceeded: '✅ Payment of {{amount}} received!\nSubscription is active until <b>{{date}}</b>.',
+    paymentSucceeded:
+      '✅ Payment of {{amount}} received!\nSubscription is active until <b>{{date}}</b>.',
     autopayFailed: '⚠️ Could not charge the subscription ({{amount}}). Please pay manually.',
     referralReward: '🎁 Referral bonus: +{{days}} days added to your subscription!',
     refunded: '↩️ Refund of {{amount}} completed.',
@@ -106,7 +109,8 @@ export const bot: DeepDict<typeof ru.bot> = {
     alreadyHandled: 'This invite has already been handled.',
   },
   client_notify: {
-    bookingConfirmed: "✅ <b>You're booked!</b>\n\n✂️ {{master}}\n💅 {{services}}\n🗓 {{date}} at {{time}}",
+    bookingConfirmed:
+      "✅ <b>You're booked!</b>\n\n✂️ {{master}}\n💅 {{services}}\n🗓 {{date}} at {{time}}",
     bookingPending:
       "🕐 <b>Request sent</b>\n\n✂️ {{master}}\n💅 {{services}}\n🗓 {{date}} at {{time}}\n\nWe'll let you know once the master confirms.",
     address: '\n📍 {{address}}',
@@ -115,7 +119,8 @@ export const bot: DeepDict<typeof ru.bot> = {
     rescheduledByMaster: '🔄 {{master}} moved your appointment to <b>{{date}} at {{time}}</b>.',
     reminder24: '{{name}}, you are booked with {{master}} for {{services}} tomorrow at {{time}}.',
     reminder2h: '{{name}}, in 2 hours — {{services}} with {{master}} at {{time}}.',
-    firstVisit: '\n\n💫 This is your first visit. Address: {{address}}. Directions — tap the button below.',
+    firstVisit:
+      '\n\n💫 This is your first visit. Address: {{address}}. Directions — tap the button below.',
     beOnTime: '\n\n🙏 Please try to arrive on time — your master is waiting for you.',
     confirmThanks: 'Thank you! Your master is waiting for you 💖',
     cancelPrompt: 'Cancel your appointment with {{master}} on {{date}} at {{time}}?',
@@ -123,9 +128,11 @@ export const bot: DeepDict<typeof ru.bot> = {
     cannotCancel: 'This appointment can no longer be cancelled.',
     postcardDefault: '{{name}}, thank you for the visit! 💖 Hope to see you again soon.',
     reviewRequest: 'How was your visit to {{master}}? Leave a review — it really helps ⭐️',
-    slotAlert: '🔥 {{master}} has a free slot: <b>{{date}} at {{time}}</b>. Book it before it’s gone!',
+    slotAlert:
+      '🔥 {{master}} has a free slot: <b>{{date}} at {{time}}</b>. Book it before it’s gone!',
     onlineOpen: '🟢 {{master}} is available right now — until {{until}}. Book a visit!',
-    birthday: '🎉 Happy birthday, {{name}}! {{master}} gives you {{pct}}% off a visit in the coming days.',
+    birthday:
+      '🎉 Happy birthday, {{name}}! {{master}} gives you {{pct}}% off a visit in the coming days.',
     sleepingDefault: "{{name}}, it's been a while! {{master}} would love to see you again 💅",
     unsubscribeHint: '\n\n<i>You can turn off broadcasts in the app profile.</i>',
     promotion: '🎁 <b>{{title}}</b> — {{pct}}% off\n{{description}}',

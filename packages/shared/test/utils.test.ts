@@ -110,7 +110,11 @@ describe('loyalty', () => {
       timeTo: '14:00',
       isActive: true,
     };
-    const base = { serviceIds: ['s1'], at: new Date('2026-10-06T08:00:00Z'), localDay: '2026-10-06' };
+    const base = {
+      serviceIds: ['s1'],
+      at: new Date('2026-10-06T08:00:00Z'),
+      localDay: '2026-10-06',
+    };
     expect(promotionApplies(promo, { ...base, localMinutes: 11 * 60, isoWeekday: 2 })).toBe(true);
     expect(promotionApplies(promo, { ...base, localMinutes: 15 * 60, isoWeekday: 2 })).toBe(false);
     expect(promotionApplies(promo, { ...base, localMinutes: 11 * 60, isoWeekday: 6 })).toBe(false);
@@ -121,15 +125,26 @@ describe('effectiveStatus', () => {
   const now = new Date('2026-10-05T10:00:00Z');
   it('expires trials and paid periods by date', () => {
     expect(
-      effectiveStatus({ status: 'TRIAL', trialEndsAt: '2026-10-06T00:00:00Z', subscriptionEndsAt: null }, now),
+      effectiveStatus(
+        { status: 'TRIAL', trialEndsAt: '2026-10-06T00:00:00Z', subscriptionEndsAt: null },
+        now,
+      ),
     ).toBe('TRIAL');
     expect(
-      effectiveStatus({ status: 'TRIAL', trialEndsAt: '2026-10-01T00:00:00Z', subscriptionEndsAt: null }, now),
+      effectiveStatus(
+        { status: 'TRIAL', trialEndsAt: '2026-10-01T00:00:00Z', subscriptionEndsAt: null },
+        now,
+      ),
     ).toBe('EXPIRED');
     expect(
-      effectiveStatus({ status: 'CANCELLED', trialEndsAt: null, subscriptionEndsAt: '2026-10-20T00:00:00Z' }, now),
+      effectiveStatus(
+        { status: 'CANCELLED', trialEndsAt: null, subscriptionEndsAt: '2026-10-20T00:00:00Z' },
+        now,
+      ),
     ).toBe('CANCELLED');
-    expect(effectiveStatus({ status: 'BANNED', trialEndsAt: null, subscriptionEndsAt: null }, now)).toBe('BANNED');
+    expect(
+      effectiveStatus({ status: 'BANNED', trialEndsAt: null, subscriptionEndsAt: null }, now),
+    ).toBe('BANNED');
   });
 });
 

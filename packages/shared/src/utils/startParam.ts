@@ -103,7 +103,9 @@ export function buildMiniAppLink(
   shortName: string | null | undefined,
   param?: StartParam | string,
 ): string {
-  const base = shortName ? `https://t.me/${botUsername}/${shortName}` : `https://t.me/${botUsername}`;
+  const base = shortName
+    ? `https://t.me/${botUsername}/${shortName}`
+    : `https://t.me/${botUsername}`;
   if (!param) return shortName ? base : `${base}?startapp`;
   const encoded = typeof param === 'string' ? param : buildStartParam(param);
   return `${base}?startapp=${encoded}`;
