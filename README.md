@@ -73,6 +73,8 @@ pnpm dev             # API на :4420 и Mini App на :5420
 
 ## Запуск внутри Telegram
 
+Пошаговая инструкция с туннелем, BotFather, проверкой уведомлений и разбором частых ошибок — [docs/local-telegram-bot.md](docs/local-telegram-bot.md). Кратко:
+
 1. Создайте бота у [@BotFather](https://t.me/BotFather), впишите `BOT_TOKEN` и `BOT_USERNAME` в `apps/api/.env`, `VITE_BOT_USERNAME` в `apps/web/.env`.
 2. Mini App должен открываться по **https**. Локально подойдёт туннель (`cloudflared tunnel --url http://localhost:5420` или ngrok). Укажите адрес в `WEB_APP_URL` и `CORS_ORIGINS`, а также в BotFather → _Bot Settings → Configure Mini App_ (или `/newapp` для именованного Mini App, тогда заполните `MINI_APP_SHORT_NAME`).
 3. `PLATFORM_OWNER_TELEGRAM_ID` — ваш Telegram ID, он получает доступ к `/admin` и еженедельный дайджест.
