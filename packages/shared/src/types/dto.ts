@@ -69,6 +69,7 @@ export interface AccessDto {
   isPublic: boolean;
   canRead: boolean;
   canWrite: boolean;
+  canNotify: boolean;
   canExport: boolean;
   autoRenewEnabled: boolean;
 }
@@ -595,6 +596,29 @@ export interface DashboardDto {
   pendingCount: number;
   isOnlineOpen: boolean;
   onlineOpenUntil: string | null;
+}
+
+export interface AnalyticsDto {
+  periodDays: number;
+  currency: string;
+  timezone: string;
+  totals: {
+    revenue: number;
+    completed: number;
+    cancelled: number;
+    noShow: number;
+    avgCheck: number;
+    newClients: number;
+    returningClients: number;
+    cancellationRatePct: number;
+  };
+  revenueByDay: { date: string; amount: number; count: number }[];
+  byService: { id: string; name: string; count: number; revenue: number }[];
+  byWeekday: { dayOfWeek: number; count: number }[];
+  byHour: { hour: number; count: number }[];
+  byMaster: { id: string; name: string; count: number; revenue: number }[];
+  gender: { gender: Gender | 'UNKNOWN'; count: number }[];
+  ages: { bucket: string; count: number }[];
 }
 
 export interface BlacklistEntryDto {

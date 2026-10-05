@@ -71,7 +71,6 @@ export type PromoCodeUpsertInput = z.input<typeof promoCodeUpsertSchema>;
 
 export const experimentVariantSchema = z.object({
   priceRub: z.number().int().min(1).max(100000).optional(),
-  salonPriceRub: z.number().int().min(1).max(100000).optional(),
   paywallTitle: z.string().trim().max(120).optional(),
   paywallText: z.string().trim().max(600).optional(),
 });

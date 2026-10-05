@@ -1,0 +1,822 @@
+// Glow — Telegram Mini App marketplace for beauty masters and salons.
+// All timestamps are stored in UTC. Local times are derived from Master/Salon.timezone.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../apps/api/src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ═══════════════════════════ Users ═══════════════════════════
+
+model User {
+  id           String    @id @default(cuid())
+  telegramId   BigInt    @unique
+  /// Normalized: lowercase, without "@".
+  username     String?
+  firstName    String?
+  lastName     String?
+  photoUrl     String?
+  languageCode String?
+  language     String    @default("ru")
+  botStartedAt DateTime?
+  lastSeenAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  roles            UserRole[]
+  clientProfile    ClientProfile?
+  clients          Client[]
+  master           Master?
+  salon            Salon?
+  onboardingDrafts OnboardingDraft[]
+  funnelEvents     FunnelEvent[]
+
+  @@index([username])
+}
+
+enum Role {
+  OWNER
+  MASTER
+  SALON
+  CLIENT
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  role      Role
+  masterId  String?
+  salonId   String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+}
+
+model ClientProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  firstName           String?
+  gender              Gender
+  birthday            DateTime @db.Date
+  username            String?
+  /// E.164
+  phone               String
+  phoneCountry        String?
+  avatarUrl           String?
+  onboardingCompleted Boolean  @default(false)
+  slotAlertsEnabled   Boolean  @default(true)
+  broadcastEnabled    Boolean  @default(true)
+  language            String   @default("ru")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNSPECIFIED
+}
+
+model OnboardingDraft {
+  id        String   @id @default(cuid())
+  userId    String
+  role      Role
+  step      Int      @default(1)
+  data      Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+}
+
+// ═══════════════════════════ Dictionaries ═══════════════════════════
+
+model Category {
+  id        String  @id @default(cuid())
+  name      String
+  nameEn    String?
+  slug      String  @unique
+  emoji     String?
+  imageUrl  String?
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  masters  MasterCategory[]
+  salons   SalonCategory[]
+  services Service[]
+}
+
+model Country {
+  id        String  @id @default(cuid())
+  name      String
+  nameEn    String?
+  code      String  @unique
+  flag      String?
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  cities  City[]
+  masters Master[]
+  salons  Salon[]
+}
+
+model City {
+  id        String  @id @default(cuid())
+  name      String
+  nameEn    String?
+  countryId String
+  timezone  String  @default("Europe/Moscow")
+  latitude  Float?
+  longitude Float?
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  country Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  masters Master[]
+  salons  Salon[]
+
+  @@index([countryId])
+}
+
+// ═══════════════════════════ Master (tenant) ═══════════════════════════
+
+enum SubStatus {
+  TRIAL
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  BANNED
+}
+
+model Master {
+  id                      String    @id @default(cuid())
+  userId                  String    @unique
+  slug                    String    @unique
+  name                    String
+  username                String?
+  channelUsername         String?
+  avatarUrl               String?
+  rules                   String?
+  autoConfirm             Boolean   @default(false)
+  allowMultiService       Boolean   @default(false)
+  postVisitMessage        String?
+  countryId               String?
+  cityId                  String?
+  address                 String?
+  latitude                Float?
+  longitude               Float?
+  timezone                String    @default("Europe/Moscow")
+  currency                String    @default("RUB")
+  status                  SubStatus @default(TRIAL)
+  trialEndsAt             DateTime?
+  subscriptionEndsAt      DateTime?
+  bannedAt                DateTime?
+  bannedReason            String?
+  isOnlineOpen            Boolean   @default(false)
+  onlineOpenUntil         DateTime?
+  yookassaPaymentMethodId String?
+  autoRenewEnabled        Boolean   @default(false)
+  pendingDiscountPct      Int?
+  pendingPromoId          String?
+  ratingAvg               Float     @default(0)
+  ratingCount             Int       @default(0)
+  salonId                 String?
+  salonJoinedAt           DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  country           Country?          @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  city              City?             @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  salon             Salon?            @relation(fields: [salonId], references: [id], onDelete: SetNull)
+  categories        MasterCategory[]
+  theme             MasterTheme?
+  blockedScreen     BlockedScreen?
+  blacklist         BlacklistEntry[]
+  services          Service[]
+  schedule          ScheduleSlot[]
+  timeBlocks        TimeBlock[]
+  appointments      Appointment[]
+  reviews           Review[]
+  clients           Client[]
+  settings          MasterSettings?
+  payments          Payment[]
+  loyaltyRules      LoyaltyRule[]
+  referrals         Referral[]
+  promotions        Promotion[]
+  broadcasts        Broadcast[]
+  slotAlerts        SlotAlert[]
+  promoUsages       PromoUsage[]
+  referralsSent     MasterReferral[]  @relation("Referrer")
+  referralsReceived MasterReferral?   @relation("Referred")
+  experiment        MasterExperiment?
+  salonInvites      SalonInvite[]
+
+  @@index([status])
+  @@index([cityId])
+  @@index([countryId])
+  @@index([salonId])
+  @@index([isOnlineOpen])
+}
+
+model MasterCategory {
+  id         String @id @default(cuid())
+  masterId   String
+  categoryId String
+
+  master   Master   @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([masterId, categoryId])
+  @@index([categoryId])
+}
+
+// ═══════════════════════════ Salon (tenant) ═══════════════════════════
+
+model Salon {
+  id                      String    @id @default(cuid())
+  ownerId                 String    @unique
+  slug                    String    @unique
+  name                    String
+  username                String?
+  channelUsername         String?
+  avatarUrl               String?
+  rules                   String?
+  address                 String?
+  latitude                Float?
+  longitude               Float?
+  countryId               String?
+  cityId                  String?
+  timezone                String    @default("Europe/Moscow")
+  currency                String    @default("RUB")
+  status                  SubStatus @default(TRIAL)
+  trialEndsAt             DateTime?
+  subscriptionEndsAt      DateTime?
+  bannedAt                DateTime?
+  bannedReason            String?
+  yookassaPaymentMethodId String?
+  autoRenewEnabled        Boolean   @default(false)
+  pendingDiscountPct      Int?
+  pendingPromoId          String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  owner       User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  country     Country?        @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  city        City?           @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  masters     Master[]
+  categories  SalonCategory[]
+  invites     SalonInvite[]
+  theme       MasterTheme?
+  payments    Payment[]
+  promoUsages PromoUsage[]
+
+  @@index([status])
+  @@index([cityId])
+}
+
+model SalonCategory {
+  id         String @id @default(cuid())
+  salonId    String
+  categoryId String
+
+  salon    Salon    @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([salonId, categoryId])
+}
+
+model SalonInvite {
+  id              String    @id @default(cuid())
+  salonId         String
+  inviteCode      String    @unique
+  invitedUsername String?
+  invitedUserId   String?
+  masterId        String?
+  /// pending | accepted | declined | expired | revoked
+  status          String    @default("pending")
+  createdAt       DateTime  @default(now())
+  expiresAt       DateTime
+  respondedAt     DateTime?
+
+  salon  Salon   @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  master Master? @relation(fields: [masterId], references: [id], onDelete: SetNull)
+
+  @@index([salonId, status])
+  @@index([invitedUsername])
+}
+
+// ═══════════════════════════ Billing ═══════════════════════════
+
+model Payment {
+  id              String    @id @default(cuid())
+  masterId        String?
+  salonId         String?
+  /// yookassa | mock
+  provider        String
+  externalId      String    @unique
+  amountKopeks    Int
+  periodDays      Int
+  /// pending | waiting_for_capture | succeeded | canceled | refunded
+  status          String
+  isAutoPayment   Boolean   @default(false)
+  savePaymentMethod Boolean @default(false)
+  discountPct     Int?
+  promoCodeId     String?
+  confirmationUrl String?
+  paymentMethodId String?
+  description     String?
+  cancelReason    String?
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  master Master? @relation(fields: [masterId], references: [id], onDelete: SetNull)
+  salon  Salon?  @relation(fields: [salonId], references: [id], onDelete: SetNull)
+
+  @@index([masterId])
+  @@index([salonId])
+  @@index([status, paidAt])
+}
+
+enum PromoType {
+  DISCOUNT_PERCENT
+  FREE_DAYS
+}
+
+model PromoCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  type      PromoType
+  value     Int
+  maxUsages Int?
+  usedCount Int       @default(0)
+  expiresAt DateTime?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  usages PromoUsage[]
+}
+
+model PromoUsage {
+  id       String   @id @default(cuid())
+  promoId  String
+  masterId String?
+  salonId  String?
+  usedAt   DateTime @default(now())
+
+  promo  PromoCode @relation(fields: [promoId], references: [id], onDelete: Cascade)
+  master Master?   @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  salon  Salon?    @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  @@unique([promoId, masterId])
+  @@unique([promoId, salonId])
+}
+
+model MasterReferral {
+  id         String    @id @default(cuid())
+  referrerId String
+  referredId String    @unique
+  bonusDays  Int       @default(14)
+  rewardedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  referrer Master @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred Master @relation("Referred", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@index([referrerId])
+}
+
+model Experiment {
+  id           String   @id @default(cuid())
+  name         String
+  hypothesis   String?
+  variantA     Json
+  variantB     Json
+  /// Share of masters (0–100) assigned to variant B.
+  splitPercent Int      @default(50)
+  isActive     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  assignments MasterExperiment[]
+}
+
+model MasterExperiment {
+  id           String   @id @default(cuid())
+  experimentId String
+  masterId     String   @unique
+  /// A | B
+  variant      String
+  assignedAt   DateTime @default(now())
+
+  experiment Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  master     Master     @relation(fields: [masterId], references: [id], onDelete: Cascade)
+
+  @@index([experimentId])
+}
+
+model PlatformSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+// ═══════════════════════════ Theme & blocked screen ═══════════════════════════
+
+model MasterTheme {
+  id         String  @id @default(cuid())
+  masterId   String? @unique
+  salonId    String? @unique
+  bgType     String  @default("color")
+  bgValue    String  @default("#ffffff")
+  btnBg      String  @default("#000000")
+  btnText    String  @default("#ffffff")
+  accent     String  @default("#3b82f6")
+  cardBg     String  @default("rgba(255,255,255,0.6)")
+  textColor  String  @default("#1d1d1f")
+  categoryBg String?
+  fontFamily String  @default("Inter")
+  radius     Int     @default(16)
+  blur       Int     @default(12)
+  preset     String?
+
+  master Master? @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  salon  Salon?  @relation(fields: [salonId], references: [id], onDelete: Cascade)
+}
+
+model BlockedScreen {
+  id         String  @id @default(cuid())
+  masterId   String  @unique
+  title      String  @default("Запись недоступна")
+  text       String  @default("К сожалению, вы не можете записаться к этому мастеру.")
+  imageUrl   String?
+  buttonText String?
+  buttonUrl  String?
+
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════ Blacklist ═══════════════════════════
+// No logs or statistics of blocked attempts are stored by design.
+
+model BlacklistEntry {
+  id        String   @id @default(cuid())
+  masterId  String
+  /// Normalized username (lowercase, no "@").
+  username  String?
+  /// Normalized phone (E.164).
+  phone     String?
+  reason    String?
+  createdAt DateTime @default(now())
+
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+
+  @@unique([masterId, username])
+  @@unique([masterId, phone])
+}
+
+// ═══════════════════════════ Services ═══════════════════════════
+
+model Service {
+  id          String    @id @default(cuid())
+  masterId    String
+  categoryId  String?
+  name        String
+  description String?
+  imageUrl    String?
+  price       Decimal   @db.Decimal(10, 2)
+  duration    Int
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  master       Master               @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  category     Category?            @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  appointments AppointmentService[]
+  promotions   Promotion[]
+
+  @@index([masterId, sortOrder])
+}
+
+// ═══════════════════════════ Schedule ═══════════════════════════
+
+model ScheduleSlot {
+  id        String  @id @default(cuid())
+  masterId  String
+  /// ISO weekday: 1 = Monday … 7 = Sunday.
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  isWorking Boolean @default(true)
+
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+
+  @@index([masterId, dayOfWeek])
+}
+
+model MasterSettings {
+  id                     String  @id @default(cuid())
+  masterId               String  @unique
+  slotStep               Int     @default(10)
+  bufferMinutes          Int     @default(0)
+  minLeadMinutes         Int     @default(60)
+  bookingHorizonDays     Int     @default(60)
+  morningEnabled         Boolean @default(true)
+  morningStart           String  @default("07:00")
+  morningEnd             String  @default("12:00")
+  dayEnabled             Boolean @default(true)
+  dayStart               String  @default("12:00")
+  dayEnd                 String  @default("18:00")
+  eveningEnabled         Boolean @default(true)
+  eveningStart           String  @default("18:00")
+  eveningEnd             String  @default("24:00")
+  nightEnabled           Boolean @default(false)
+  nightStart             String  @default("00:00")
+  nightEnd               String  @default("07:00")
+  dailyReminderEnabled   Boolean @default(true)
+  dailyReminderTime      String  @default("20:00")
+  dailyReminderSendEmpty Boolean @default(false)
+  morningSummaryEnabled  Boolean @default(true)
+  slotAlertsEnabled      Boolean @default(true)
+  onlineDurationHours    Int     @default(2)
+
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+}
+
+model TimeBlock {
+  id       String   @id @default(cuid())
+  masterId String
+  startAt  DateTime
+  endAt    DateTime
+  reason   String?
+
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+
+  @@index([masterId, startAt])
+}
+
+// ═══════════════════════════ Clients & appointments ═══════════════════════════
+
+model Client {
+  id                String    @id @default(cuid())
+  masterId          String
+  userId            String?
+  telegramId        BigInt?
+  /// Normalized username (lowercase, no "@").
+  username          String?
+  /// E.164
+  phone             String?
+  firstName         String?
+  gender            Gender?
+  birthday          DateTime? @db.Date
+  notes             String?
+  slotAlertsEnabled Boolean   @default(true)
+  broadcastEnabled  Boolean   @default(true)
+  visitsCount       Int       @default(0)
+  totalSpent        Decimal   @default(0) @db.Decimal(12, 2)
+  lastVisitAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  master          Master        @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  appointments    Appointment[]
+  reviews         Review[]
+  referralsMade   Referral[]    @relation("ReferralReferrer")
+  referredBy      Referral[]    @relation("ReferralReferred")
+  slotAlerts      SlotAlert[]
+  broadcastsTaken BroadcastRecipient[]
+
+  @@unique([masterId, telegramId])
+  @@index([masterId])
+  @@index([userId])
+  @@index([telegramId])
+}
+
+enum Status {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model Appointment {
+  id                String    @id @default(cuid())
+  masterId          String
+  clientId          String
+  startAt           DateTime
+  endAt             DateTime
+  status            Status    @default(PENDING)
+  price             Decimal?  @db.Decimal(10, 2)
+  originalPrice     Decimal?  @db.Decimal(10, 2)
+  discountPct       Int?
+  /// e.g. "loyalty:EVERY_N_VISIT", "promotion:<id>"
+  discountSource    String?
+  clientComment     String?
+  photos            String[]
+  beforePhotoUrl    String?
+  afterPhotoUrl     String?
+  clientConfirmedAt DateTime?
+  clientLate        Boolean   @default(false)
+  /// client | master | salon
+  createdBy         String
+  completedAt       DateTime?
+  cancelledAt       DateTime?
+  /// client | master | salon | system
+  cancelledBy       String?
+  cancelReason      String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  master   Master               @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  client   Client               @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  services AppointmentService[]
+  review   Review?
+
+  @@index([masterId, startAt])
+  @@index([clientId])
+  @@index([status, startAt])
+}
+
+model AppointmentService {
+  id            String   @id @default(cuid())
+  appointmentId String
+  serviceId     String
+  name          String
+  duration      Int
+  price         Decimal? @db.Decimal(10, 2)
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  service     Service     @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  @@unique([appointmentId, serviceId])
+}
+
+model Review {
+  id            String   @id @default(cuid())
+  masterId      String
+  appointmentId String?  @unique
+  clientId      String?
+  clientName    String
+  rating        Int
+  comment       String?
+  photos        String[]
+  isPublished   Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  master      Master       @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  client      Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([masterId, isPublished])
+}
+
+// ═══════════════════════════ Loyalty ═══════════════════════════
+
+enum LoyaltyType {
+  EVERY_N_VISIT
+  REFERRAL
+  CUMULATIVE
+  FIRST_VISIT
+  BIRTHDAY
+}
+
+model LoyaltyRule {
+  id          String      @id @default(cuid())
+  masterId    String
+  type        LoyaltyType
+  threshold   Int?
+  discountPct Int
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+
+  @@index([masterId])
+}
+
+model Referral {
+  id                   String    @id @default(cuid())
+  masterId             String
+  referrerId           String
+  referredId           String
+  appliedAt            DateTime  @default(now())
+  referredRewardUsedAt DateTime?
+  referrerRewardUsedAt DateTime?
+
+  master   Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  referrer Client @relation("ReferralReferrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred Client @relation("ReferralReferred", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@unique([masterId, referredId])
+}
+
+// ═══════════════════════════ Promotions & broadcasts ═══════════════════════════
+
+model Promotion {
+  id          String   @id @default(cuid())
+  masterId    String
+  title       String
+  description String?
+  serviceId   String?
+  discountPct Int
+  validFrom   DateTime
+  validTo     DateTime
+  /// ISO weekdays; empty = every day.
+  daysOfWeek  Int[]
+  timeFrom    String?
+  timeTo      String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  master  Master   @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@index([masterId, isActive])
+}
+
+model Broadcast {
+  id            String   @id @default(cuid())
+  masterId      String
+  segment       String
+  segmentParams Json?
+  text          String
+  imageUrl      String?
+  sentAt        DateTime @default(now())
+  recipients    Int
+
+  master     Master               @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  deliveries BroadcastRecipient[]
+
+  @@index([masterId, sentAt])
+}
+
+model BroadcastRecipient {
+  id          String   @id @default(cuid())
+  broadcastId String
+  clientId    String
+  telegramId  BigInt
+  sentAt      DateTime @default(now())
+
+  broadcast Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+  client    Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([telegramId, sentAt])
+}
+
+// ═══════════════════════════ Free-slot alerts ═══════════════════════════
+
+model SlotAlert {
+  id            String   @id @default(cuid())
+  masterId      String
+  clientId      String
+  telegramId    BigInt?
+  appointmentId String?
+  startAt       DateTime
+  sentAt        DateTime @default(now())
+
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([masterId, clientId, sentAt])
+  @@index([telegramId, sentAt])
+}
+
+// ═══════════════════════════ Platform internals ═══════════════════════════
+
+/// Idempotency log for scheduled notifications: one row per unique notification key.
+model NotificationLog {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  kind      String
+  chatId    BigInt?
+  createdAt DateTime @default(now())
+
+  @@index([kind, createdAt])
+}
+
+model FunnelEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  /// MASTER | SALON | CLIENT | ANY
+  role      String   @default("ANY")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type, role])
+  @@index([type, createdAt])
+}

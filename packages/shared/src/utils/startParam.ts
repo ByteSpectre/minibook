@@ -3,6 +3,10 @@
  * Slugs never contain `_`, so `_` is a safe separator.
  */
 export const START_ROUTES = [
+  'onboarding_client',
+  'onboarding_master',
+  'onboarding_salon',
+  'client_search',
   'client_home',
   'client_calendar',
   'client_profile',
