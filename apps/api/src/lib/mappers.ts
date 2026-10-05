@@ -20,6 +20,7 @@ import {
   type ThemePreset,
 } from '@nail-crm/shared';
 import type { Prisma } from '../db/prisma';
+import { icsUrlFor } from './links';
 
 type Decimalish = Prisma.Decimal | number | string | null | undefined;
 
@@ -377,5 +378,6 @@ export function toClientAppointmentDto(
     canRepeat:
       a.status === 'COMPLETED' || a.status === 'CANCELLED' || a.status === 'NO_SHOW' || !upcoming,
     review: a.review ? toReviewDto(a.review) : null,
+    icsUrl: icsUrlFor(a.id),
   };
 }

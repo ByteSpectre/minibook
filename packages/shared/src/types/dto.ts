@@ -214,6 +214,7 @@ export interface ClientAppointmentDto {
   canReview: boolean;
   canRepeat: boolean;
   review: ReviewDto | null;
+  icsUrl: string;
 }
 
 /* ───────────── Search & public ───────────── */

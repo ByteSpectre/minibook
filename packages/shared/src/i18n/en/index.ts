@@ -1,6 +1,8 @@
 import type { DeepDict } from '../types';
 import type { Dictionary } from '../ru';
+import { client, components, dev, publicPage, start } from './app';
 import { bot } from './bot';
+import { admin, checkout, master, salon } from './cabinet';
 import { common, errors, nav, validation } from './core';
 import { enums } from './enums';
 
@@ -11,4 +13,13 @@ export const en: DeepDict<Dictionary> = {
   errors,
   enums,
   bot,
+  start,
+  dev,
+  components,
+  client,
+  public: publicPage,
+  master,
+  salon,
+  admin,
+  checkout,
 };

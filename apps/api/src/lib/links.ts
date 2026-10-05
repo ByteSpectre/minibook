@@ -1,5 +1,12 @@
 import { buildMiniAppLink, buildStartParam, type StartParam } from '@nail-crm/shared';
 import { config, env } from '../config';
+import { signDownloadToken } from './jwt';
+
+/** Signed .ics link (opened outside the app, so it can't carry the auth header). */
+export function icsUrlFor(appointmentId: string): string {
+  const token = signDownloadToken({ kind: 'ics', id: appointmentId }, 60 * 60 * 24 * 60);
+  return `${config.publicApiUrl}/api/files/ics/${token}`;
+}
 
 export const miniAppLink = (param?: StartParam | string): string =>
   buildMiniAppLink(env.BOT_USERNAME, env.MINI_APP_SHORT_NAME || null, param);

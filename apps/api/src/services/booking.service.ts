@@ -6,11 +6,10 @@ import {
   type bookingCreateSchema,
   type BookingResponse,
 } from '@nail-crm/shared';
-import { config } from '../config';
 import { prisma } from '../db/prisma';
 import { defer } from '../lib/deferred';
 import { AppError, badRequest, conflict, NotFoundError } from '../lib/errors';
-import { signDownloadToken } from '../lib/jwt';
+import { icsUrlFor } from '../lib/links';
 import { clientAppointmentInclude, toClientAppointmentDto } from '../lib/mappers';
 import { addMinutes } from '../lib/time';
 import { identityOf, isBlacklisted, loadUserAtMaster, mergeIdentity } from './blacklist.service';
@@ -27,11 +26,6 @@ type Tx = Parameters<Parameters<typeof prisma.$transaction>[0]>[0];
 /** Serializes bookings per master so two clients can't take the same slot. */
 export async function lockMaster(tx: Tx, masterId: string): Promise<void> {
   await tx.$queryRaw`SELECT 1 AS ok FROM pg_advisory_xact_lock(hashtext(${masterId}))`;
-}
-
-export function icsUrlFor(appointmentId: string): string {
-  const token = signDownloadToken({ kind: 'ics', id: appointmentId }, 60 * 60 * 24 * 30);
-  return `${config.publicApiUrl}/api/files/ics/${token}`;
 }
 
 export interface ResolvedContact {
