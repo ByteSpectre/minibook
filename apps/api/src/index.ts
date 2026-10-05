@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { webhookCallback } from 'grammy';
 import { createApp } from './app';
 import { configureBot, createBot } from './bot/bot';

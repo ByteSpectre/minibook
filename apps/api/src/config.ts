@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { z } from 'zod';
 import { BILLING_DEFAULTS } from '@nail-crm/shared';
 
