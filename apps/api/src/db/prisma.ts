@@ -5,7 +5,9 @@ import { env } from '../config';
 export { Prisma } from '../generated/prisma/client';
 export type * from '../generated/prisma/client';
 
-const adapter = new PrismaPg({ connectionString: env.DATABASE_URL, max: 20 });
+/** Keep the pool tiny on Vercel (one connection per isolate); larger locally / on a VPS. */
+const poolMax = process.env.VERCEL === '1' ? 1 : 20;
+const adapter = new PrismaPg({ connectionString: env.DATABASE_URL, max: poolMax });
 
 /**
  * Base client. Tenant-owned data must be accessed through `forMaster` / `forSalon`

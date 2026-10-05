@@ -139,7 +139,7 @@ CI (`.github/workflows/ci.yml`) поднимает PostgreSQL и прогоня�
 
 ## Тестовый стенд: Vercel + Supabase
 
-Для тестов без своего VPS: Postgres на **Supabase**, Mini App на **Vercel**, API — на Railway/Render (Express + cron + bot не ложатся на serverless без доработок). Полный гайд: [docs/vercel-supabase.md](docs/vercel-supabase.md).
+Postgres на **Supabase**, Mini App и API — **два проекта на Vercel** (`apps/web` + `apps/api`). Полный гайд: [docs/vercel-supabase.md](docs/vercel-supabase.md).
 
 ## Уведомления и cron
 

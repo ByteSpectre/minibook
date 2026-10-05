@@ -10,11 +10,11 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check:isolation": "vitest run test/isolation",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate --config prisma7.config.ts",
+    "db:migrate": "prisma migrate dev --config prisma7.config.ts",
+    "db:deploy": "prisma migrate deploy --config prisma7.config.ts",
     "db:seed": "tsx src/db/seed.ts",
-    "db:reset": "prisma migrate reset --force",
+    "db:reset": "prisma migrate reset --force --config prisma7.config.ts",
     "webhook:url": "tsx src/scripts/webhook-url.ts"
   },
   "dependencies": {

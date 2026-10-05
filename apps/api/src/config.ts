@@ -75,6 +75,11 @@ function loadEnv(): Env {
     throw new Error(`Invalid environment configuration:\n${issues}`);
   }
   const env = parsed.data;
+  if (process.env.VERCEL === '1') {
+    // Serverless cannot run long-polling or in-process node-cron.
+    if (env.BOT_MODE === 'polling') env.BOT_MODE = 'webhook';
+    env.CRON_ENABLED = false;
+  }
   if (env.NODE_ENV === 'production' && env.DEV_AUTH_ENABLED) {
     console.warn('DEV_AUTH_ENABLED is ignored in production');
     env.DEV_AUTH_ENABLED = false;
