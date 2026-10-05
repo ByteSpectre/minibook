@@ -103,9 +103,9 @@ export function createBot(token: string): Bot {
         rows.push([app(t('bot.buttons.openMaster'), '/master', 'go_master_dashboard')]);
       if (roles.salonId)
         rows.push([app(t('bot.buttons.openSalon'), '/salon', 'go_salon_dashboard')]);
-      if (config.ownerTelegramId === user.telegramId)
-        rows.push([app(t('bot.buttons.openAdmin'), '/admin', 'go_admin')]);
     }
+    if (config.ownerTelegramId === user.telegramId)
+      rows.push([app(t('bot.buttons.openAdmin'), '/admin', 'go_admin')]);
     if (!roles.client)
       rows.push([app(t('bot.buttons.client'), '/onboarding/client', 'go_onboarding_client')]);
     if (!roles.masterId)
