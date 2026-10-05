@@ -1,0 +1,53 @@
+{
+  "name": "nail-crm",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Glow — Telegram Mini App marketplace & SaaS for beauty masters and salons",
+  "type": "module",
+  "packageManager": "pnpm@10.33.3",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @nail-crm/api --filter @nail-crm/web dev",
+    "dev:api": "pnpm --filter @nail-crm/api dev",
+    "dev:web": "pnpm --filter @nail-crm/web dev",
+    "build": "pnpm --filter @nail-crm/api build && pnpm --filter @nail-crm/web build",
+    "start": "pnpm --filter @nail-crm/api start",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "pnpm -r test",
+    "check:isolation": "pnpm --filter @nail-crm/api check:isolation",
+    "db:generate": "pnpm --filter @nail-crm/api db:generate",
+    "db:migrate": "pnpm --filter @nail-crm/api db:migrate",
+    "db:deploy": "pnpm --filter @nail-crm/api db:deploy",
+    "db:seed": "pnpm --filter @nail-crm/api db:seed",
+    "db:reset": "pnpm --filter @nail-crm/api db:reset",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,cjs,mjs,json,md,css,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0"
+  }
+}
